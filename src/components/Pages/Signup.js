@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const paperStyling = {
   width: "25vw",
   // height: "70vh",
-  margin: "6rem auto",
+  margin: "3rem auto",
   padding: "2rem",
 };
 const Signup = () => {
@@ -224,7 +224,7 @@ const Signup = () => {
             type="Sumbit"
             color="primary"
             sx={{ mt: ".5rem" }}
-            variant="outlined"
+            variant="contained"
             fullWidth
           >
             Sign Up

@@ -31,10 +31,17 @@ const Login = () => {
         }).then(res=>res.json())
         .then(res=>{
             console.log(res)
-            if(res.status===400)
+            if(res.status===400){
             toast(res.msg)
-            if(res.status===200)
-            navigate('/');
+            }
+            if(res.status===200){
+                console.log(res.data)
+                setTimeout(()=>{
+                    navigate('/')
+                },1000)
+                toast(res.msg)
+                localStorage.setItem('token',res.data)
+            }
         })
 
     }
