@@ -221,7 +221,7 @@ const Signup = () => {
             />
           </Grid>
           <Button
-            type="Sumbit"
+            type="Submit"
             color="primary"
             sx={{ mt: ".5rem" }}
             variant="contained"

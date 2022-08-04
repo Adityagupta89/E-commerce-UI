@@ -23,7 +23,6 @@ const Home = (props) => {
       setProducts(result);
     }
   }, [sort]);
-  console.log(sort);
   useEffect(() => {
     fetch("http://localhost:3020/api/product/", {
       headers: {
