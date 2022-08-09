@@ -23,12 +23,11 @@ const Product = () => {
   console.log(product);
   return (
     <>
-      <Grid container sx={{mt:4}}>
+      <Grid container sx={{ mt: 4 }}>
         <Grid item xs={12} sm={6}>
           <Box>
             <img
               src={image}
-              
               style={{ width: "80%", height: "70vh", backgroundSize: "cover" }}
             />
           </Box>
@@ -56,7 +55,11 @@ const Product = () => {
             >
               {product.description}
             </Typography>
-            <Typography variant="h4" color="text.secondary" sx={{textAlign:"center"}}>
+            <Typography
+              variant="h4"
+              color="text.secondary"
+              sx={{ textAlign: "center" }}
+            >
               <strong style={{ fontSize: "1.5rem" }}> Price</strong>
               {product.price}
             </Typography>

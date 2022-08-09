@@ -6,32 +6,37 @@ import { Button } from "@mui/material";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import classes from './Cart.module.css'
-import { toast } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+import { cartAction } from "../redux/cartSlice";
+import 'react-toastify/dist/ReactToastify.css';
+
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const products = useSelector((state) => state.cart.product);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const [user, setUser] = useState({});
   const user_id = localStorage.getItem("user_id");
+  const token = localStorage.getItem("token");
   const empty_Cart = (
     <Typography variant="h2" component="div" sx={{textAlign:'center'}}>
       Product cart is Empty
     </Typography>
   );
   const orderHandler=()=>{
-    products.forEach(element => {
-        createOrder(element);
-    });
     const createOrder= async (product)=>{
         const data={
             user_id:user_id,
             product_id:product?._id,
-            amount:amount,
+            amount:product?.price,
             address_info:{
-                address1:address1,
-                address2:address2,
-                city:city,
-                pincode:pincode,
+                address1:"Pan Card Club Road",
+                address2:"Shree laxmi pg Baner",
+                landmark:'Seedling Pre School',
+                city:"Pune",
+                pincode:"244001",
             } 
         }
         await fetch("http://localhost:3020/api/order",{
@@ -41,20 +46,20 @@ const Cart = () => {
                 "Content-Type":"application/json",
                 'x-auth-token':token
             }
-        }).then(res=>res.json())
-        .then(res=>{
-            console.log(res)
-            if(res.status===400)
-            toast(res.msg)
-            if(res.status===201){
-            setTimeout(()=>{
-                navigate('/')
-            },6000)
-            toast(res.msg)
-            setOpen(false);
-        }
         }).catch(err=>console.log(err))
     }
+    try{
+    products.forEach(element => {
+        createOrder(element);
+    });
+    }
+    catch(err){toast(err.message)};
+    setTimeout(()=>{
+        dispatch(cartAction.clearCart())    
+        navigate('/')
+    },3000)
+    toast('Order place')
+  
   }
   console.log(products);
   useEffect(() => {
@@ -70,6 +75,7 @@ const Cart = () => {
   console.log(user);
   return (
     <div className={classes.body}>
+        <ToastContainer/>
     <Container sx={{width:'80vw'}}>
         {products.length==0 && empty_Cart}
       {products.length > 0 && (

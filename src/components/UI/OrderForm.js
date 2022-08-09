@@ -8,7 +8,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 export default function OrderForm(props) {
@@ -20,18 +19,15 @@ export default function OrderForm(props) {
   const [landmark,setLandmark]=useState();
   const [city,setCity]=useState();
   const [pincode,setPincode]=useState();
-
   const product_id=props.url
   const user_id=localStorage.getItem('user_id')
   const token=localStorage.getItem('token')
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-
   const submitHandler=(e)=>{
     console.log("Aditya")
     e.preventDefault();
@@ -47,7 +43,6 @@ export default function OrderForm(props) {
         } 
     }
     const createOrder= async ()=>{
-      
         await fetch("http://localhost:3020/api/order",{
             method:"POST",
             body:JSON.stringify(data),
@@ -70,9 +65,7 @@ export default function OrderForm(props) {
         }).catch(err=>console.log(err))
     }
     createOrder();
- 
   }
-
   return (
     <div>
         <ToastContainer/>
@@ -162,7 +155,6 @@ export default function OrderForm(props) {
       <Button variant="contained" color='primary'  type='submit'>
         Place
       </Button>
-          
         </DialogActions>
         </form>
       </Dialog>

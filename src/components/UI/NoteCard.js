@@ -35,7 +35,6 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
-
 const NoteCard = (props) => {
   const [expanded, setExpanded] = React.useState(false);
   const [image, setImage] = useState();
@@ -43,12 +42,10 @@ const NoteCard = (props) => {
   const addProductHandler=()=>{
      dispatch(cartAction.addProduct({product:props.product}));
   }
-  
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   return (
-    
       <Card sx={{ maxWidth: 500, m: 3, borderStyle: "solid" }}>
        <Link
       to={`/api/product/${props.product._id}`}
@@ -59,11 +56,7 @@ const NoteCard = (props) => {
               <SendToMobileIcon />
             </Avatar>
           }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
+         
           title={props.product.name}
           subheader="September 14, 2016"
         />
@@ -99,14 +92,6 @@ const NoteCard = (props) => {
               <EditIcon />
             </Link>
           </IconButton>
-          {/* <Link to={`/api/order?product_id=${props.product._id}`} style={{textDecoration:'none'}}>
-          <Button
-          sx={{backgroundColor:'#a1a1a1'}}
-            variant="contained"            
-          >
-            Place
-          </Button>
-          </Link> */}
           <OrderForm url={props.product._id}/>
         </CardActions>
       </Card>

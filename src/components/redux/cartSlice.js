@@ -1,12 +1,12 @@
 
 import { createSlice } from "@reduxjs/toolkit";
-const initialAuthState={
+const initialCartState={
     totalAmount:0,
     product:[],
 }
 const cartSlice=createSlice({
     name:'cart',
-    initialState:initialAuthState,
+    initialState:initialCartState,
     reducers:{
         addProduct(state,action){
             let Product=action.payload.product;
@@ -49,6 +49,9 @@ const cartSlice=createSlice({
                 product:updateItems,
                 totalAmount:updateTotalAmount
             }
+        },
+        clearCart(state,action){
+            return initialCartState;
         }
     }
 });

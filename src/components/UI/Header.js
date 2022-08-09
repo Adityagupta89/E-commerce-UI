@@ -13,7 +13,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import classes from "./Header.module.css";
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 // import {Grid} from '@mui/material';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -59,15 +62,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header(props) {
   const [search, setSearch] = useState("");
+  const login = useSelector((state) => state.auth.isLogin);
+  const navigate=useNavigate();
+  const buttonHandle=()=>{
+    localStorage.removeItem('isAdmin')
+    localStorage.removeItem('isLogin')
+    localStorage.removeItem('token')
+    navigate('/login');
+  }
   props.search(search);
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Stack direction="row">
+       { login &&(<Stack direction="row">
           <Button color="inherit" ><Link to='/' style={{textDecoration:'none',color:'white'}}>Product</Link></Button>
           <Button color="inherit"> <Link to='api/order/' style={{textDecoration:'none',color:'white'}}>Order</Link></Button>
-        </Stack>
-        <div className={classes.search}>
+          <Button color="inherit"> <Link to='api/product/' style={{textDecoration:'none',color:'white'}}>Add</Link></Button>
+        </Stack>)}
+        { login && (<div className={classes.search}>
           <Search onChange={(e) => setSearch(e.target.value)}>
             <SearchIconWrapper>
               <SearchIcon />
@@ -77,9 +89,14 @@ export default function Header(props) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          <Link to='api/profile'>
           <AccountCircleIcon />
-          <ShoppingCartIcon />
-        </div>
+          </Link>
+          <Link to='api/cart/'>
+          <ShoppingCartIcon  />
+          </Link>
+          <LogoutIcon onClick={buttonHandle} sx={{cursor:'pointer'}}/> 
+        </div>)}
       </Toolbar>
     </AppBar>
   );
