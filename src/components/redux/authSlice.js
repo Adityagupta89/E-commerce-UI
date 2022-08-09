@@ -14,10 +14,10 @@ const authSlice=createSlice({
             state.isLogin=true;
         },
         logout(state){
-            state.logout=false;
+            state.isLogin=false;
         },
-        admin(state){
-            state.isAdmin=true;
+        admin(state,action){
+            state.isAdmin=action.payload.value;
         },
         setToken(state,action){
           state.token=action.payload.token;  

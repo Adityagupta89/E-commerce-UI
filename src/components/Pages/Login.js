@@ -39,7 +39,9 @@ const Login = () => {
             if(res.status===200){
                 localStorage.setItem('token',res.data);
                 dispatch(authAction.login())
-                localStorage.setItem('isAdmin',res.isAdmin)
+                console.log(res.isAdmin)
+               
+                dispatch(authAction.admin({value:res.isAdmin}));
                 localStorage.setItem('user_id',res.user_id)
                 setTimeout(()=>{
                     navigate('/')

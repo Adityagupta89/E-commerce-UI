@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { cartAction } from "../redux/cartSlice";
 import {IconButton} from '@mui/material';
 import { borderRadius } from '@mui/system';
+import {Divider} from '@mui/material';
 export default function ProductCart(props) {
     const dispatch=useDispatch();
     const addProductHandler=()=>{
@@ -21,8 +22,9 @@ export default function ProductCart(props) {
      }
   return (
     <>
-    <hr/>
-    <Grid container sx={{ maxWidth: '100%'}}>
+    <Divider/>
+    <Grid container sx={{ maxWidth: '100%',mt:'2rem'}}>
+        
         <Stack sx={{width:'100%',flexDirection:'row'}}>
         <Stack sx={{width:'50%',height:'100%'}}>
         <img
@@ -53,6 +55,7 @@ export default function ProductCart(props) {
         </Stack>
         </Stack>
         </Grid>
+        <Divider/>
         </>
   );
 }

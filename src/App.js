@@ -12,12 +12,11 @@ import Order from "./components/Pages/Order";
 import Common from "./utils/Common";
 import Profile from "./components/Pages/Profile";
 import Cart from "./components/Pages/Cart";
+import { useSelector } from "react-redux";
 const App = () => {
   const [search, setSearch] = useState();
-  const [admin,setAdmin]=useState(false)
-  useEffect(()=>{
-    setAdmin(localStorage.getItem('isAdmin'))
-  },[admin])
+  const admin = useSelector((state) => state.auth.isAdmin);
+  console.log(admin)
   const searchHandler = (data) => {
     setSearch(data);
   };
@@ -33,8 +32,8 @@ const App = () => {
         <Route path="/api/cart/" element={<Cart/>} />      
         <Route path="/api/order" element={<Order/>} />   
         <Route path="/api/profile" element={<Profile/>} />  
-        {admin === "true" && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
-        {admin === "true" && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}
+        {admin && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
+        {admin && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}
        </Route>
         <Route path='*' element={<Common/>} />
       </Routes>

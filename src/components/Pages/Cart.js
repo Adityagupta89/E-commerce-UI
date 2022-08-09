@@ -89,7 +89,7 @@ const Cart = () => {
             {products.map((product) => (
               <ProductCart product={product} />
             ))}
-            <hr/>
+            
           </Grid>
           <Grid
             item

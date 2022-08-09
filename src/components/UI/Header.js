@@ -13,10 +13,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import classes from "./Header.module.css";
+import { authAction } from "../redux/authSlice";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import {Grid} from '@mui/material';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,11 +63,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header(props) {
   const [search, setSearch] = useState("");
+  const dispatch=useDispatch()
   const login = useSelector((state) => state.auth.isLogin);
   const navigate=useNavigate();
   const buttonHandle=()=>{
-    localStorage.removeItem('isAdmin')
-    localStorage.removeItem('isLogin')
+    dispatch(authAction.admin({value:false}))
+    dispatch(authAction.logout());
     localStorage.removeItem('token')
     navigate('/login');
   }
