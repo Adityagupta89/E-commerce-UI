@@ -9,9 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useDispatch } from 'react-redux';
+import { authAction } from '../redux/authSlice';
 const paperStyling={width:'20vw',margin: '10rem auto',padding:'20px'}
 const Login = () => {
+    const dispatch=useDispatch();
     const [username,setUsername]=useState('');
     const [password,setPassword]=useState('');
     const navigate=useNavigate();
@@ -35,12 +37,15 @@ const Login = () => {
             toast(res.msg)
             }
             if(res.status===200){
-                console.log(res.data)
+                localStorage.setItem('token',res.data);
+                dispatch(authAction.login())
+                localStorage.setItem('isAdmin',res.isAdmin)
+                localStorage.setItem('user_id',res.user_id)
                 setTimeout(()=>{
                     navigate('/')
                 },1000)
                 toast(res.msg)
-                localStorage.setItem('token',res.data)
+                
             }
         })
 

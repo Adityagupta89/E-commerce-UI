@@ -12,14 +12,18 @@ import { positions } from "@mui/system";
 import { useMemo } from "react";
 const Home = (props) => {
   const [products, setProducts] = useState([]);
-  const [sort, setSort] = useState(false);
+  const [sort, setSort] = useState('');
 
   const handleChange = (event) => {
     setSort(event.target.value);
   };
   useMemo(() => {
-    if (sort === true) {
+    if (sort === 'name') {
       const result = products.sort((a, b) => a.name.localeCompare(b.name));
+      setProducts(result);
+    }
+    if (sort === 'price') {
+      const result = products.sort((a, b) => +a.price - +b.price);
       setProducts(result);
     }
   }, [sort]);
@@ -53,7 +57,8 @@ const Home = (props) => {
               label="Sort"
               onChange={handleChange}
             >
-              <MenuItem value={true}>Name</MenuItem>
+              <MenuItem value='name'>Name</MenuItem>
+              <MenuItem value='price'>Price</MenuItem>
             </Select>
           </FormControl>
         </Box>
