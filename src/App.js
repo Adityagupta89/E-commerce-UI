@@ -16,13 +16,14 @@ import { useSelector } from "react-redux";
 const App = () => {
   const [search, setSearch] = useState();
   const admin = useSelector((state) => state.auth.isAdmin);
+  const login = useSelector((state) => state.auth.isLogin);
   
   const searchHandler = (data) => {
     setSearch(data);
   };
   return (
     <>
-      <Header search={searchHandler} />
+     {login && (<Header search={searchHandler} />)}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />  

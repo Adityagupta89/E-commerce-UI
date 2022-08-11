@@ -65,7 +65,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header(props) {
   const [search, setSearch] = useState("");
   const dispatch=useDispatch()
-  const login = useSelector((state) => state.auth.isLogin);
   const products = useSelector((state) => state.cart.product);
   const navigate=useNavigate();
   const numberOfCartItems = products.reduce((curNumber, product) => {
@@ -81,12 +80,12 @@ export default function Header(props) {
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-       { login &&(<Stack direction="row" sx={{width:'30%'}}>
+       <Stack direction="row" sx={{width:'30%'}}>
           <Button color="inherit" ><Link to='/' style={{textDecoration:'none',color:'white'}}>Product</Link></Button>
           <Button color="inherit"> <Link to='api/order/' style={{textDecoration:'none',color:'white'}}>Order</Link></Button>
           
-        </Stack>)}
-        { login && (<div className={classes.search}>
+        </Stack>
+          <div className={classes.search}>
           <Stack flexDirection='row' alignItems='center' justifyContent='flex-end' sx={{width:'100%'}} >
           <Search onChange={(e) => setSearch(e.target.value)} sx={{width:'50%'}}>
             <SearchIconWrapper>
@@ -98,17 +97,17 @@ export default function Header(props) {
             />
           </Search>
           <Link to='api/profile' >
-          <AccountCircleIcon sx={{fontSize:'1.8rem',m:'10px'}} />
+          <AccountCircleIcon sx={{fontSize:'2.2rem',m:'10px'}} />
           </Link>
           <Box sx={{backgroundColor:'#165ba0',borderRadius:'20px',width:'100px',p:'5px',m:'10px'}}>
           <Link to='api/cart/' style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}} >
           <ShoppingCartIcon sx={{fontSize:'1.8rem',textAlign:'center'}}  />
-          <Chip label={numberOfCartItems} sx={{fontSize:'1.5rem',cursor:'pointer'}} filled/>
+          <Chip label={numberOfCartItems} sx={{fontSize:'1.5rem',cursor:'pointer',backgroundColor:'#9b9bb0'}} filled/>
           </Link>
           </Box>
           <LogoutIcon onClick={buttonHandle} sx={{cursor:'pointer'}}/> 
           </Stack>
-        </div>)}
+        </div>
       </Toolbar>
     </AppBar>
   );

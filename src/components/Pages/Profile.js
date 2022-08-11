@@ -221,10 +221,10 @@ const Profile = () => {
             <TextField
               id="outlined-basic11"
               //   sx={{ mt: "1rem" }}
-              placeholder="DOB"
+              defaultValue={`${user?.dob}`}
               variant="outlined"
               onChange={(e) => setDate(e.target.value)}
-              
+              InputLabelProps={{ shrink: true, required: true }}
               type="date"
               fullWidth
             />
