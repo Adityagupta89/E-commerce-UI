@@ -20,11 +20,12 @@ import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button } from "@mui/material";
 import OrderForm from "./OrderForm";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import { useDispatch } from "react-redux";
 import { cartAction } from "../redux/cartSlice";
+import { useSelector } from "react-redux";
 import { authAction } from "../redux/authSlice";
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveIcon from "@mui/icons-material/Remove";
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
@@ -38,64 +39,61 @@ const ExpandMore = styled((props) => {
 const NoteCard = (props) => {
   const [expanded, setExpanded] = React.useState(false);
   const [image, setImage] = useState();
-  const dispatch=useDispatch()
-  const addProductHandler=()=>{
-     dispatch(cartAction.addProduct({product:props.product}));
-  }
+  const admin = useSelector((state) => state.auth.isAdmin);
+  const dispatch = useDispatch();
+  const addProductHandler = () => {
+    dispatch(cartAction.addProduct({ product: props.product }));
+  };
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
   return (
-      <Card sx={{ maxWidth: 500, m: 3, borderStyle: "solid" }}>
-       <Link
-      to={`/api/product/${props.product._id}`}
-      style={{ textDecoration: "none" }} >
+    <Card sx={{ maxWidth: 500, m: 3, borderStyle: "solid" }}>
+      <Link
+        to={`/api/product/${props.product._id}`}
+        style={{ textDecoration: "none" }}
+      >
         <CardHeader
           avatar={
             <Avatar sx={{ color: "black" }} aria-label="recipe">
               <SendToMobileIcon />
             </Avatar>
           }
-         
           title={props.product.name}
           subheader="September 14, 2016"
         />
-        </Link>
-        <CardMedia
-          style={{ marginLeft: "2rem" }}
-          component="img"
-          height="300"
-          className="img"
-          image={"http://localhost:3020/" + props.product.product_image}
-          alt="Paella dish"
-        />
-        <CardContent>
-          <Typography variant="h6" color="text.secondary">
-            {props.product.description}
-          </Typography>
-          <Typography variant="h5" color="text.secondary">
-            <strong style={{ fontSize: "1.5rem" }}>Price</strong>{" "}
-            {props.product.price}
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing sx={{justifyContent:'space-evenly'}}>
-       
-          <Button
-          sx={{backgroundColor:'#a1a1a1'}}
-            variant="contained"    
-            onClick={addProductHandler}        
-          >
-            Add Items
-          </Button>
+      </Link>
+      <CardMedia
+        style={{ marginLeft: "2rem" }}
+        component="img"
+        height="300"
+        className="img"
+        image={"http://localhost:3020/" + props.product.product_image}
+        alt="Paella dish"
+      />
+      <CardContent sx={{height:'10vh',display:'flex',flexDirection:'column',justifyContent:'space-evenly'}}>
+        <Typography variant="h6" color="text.secondary">
+          {props.product.description}
+        </Typography>
+        <Typography variant="h5" color="text.secondary">
+          <strong style={{ fontSize: "1.5rem" }}>Price</strong>{" "}
+          {props.product.price}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing sx={{ justifyContent: "space-evenly", }}>
+        <Button color="primary" variant="contained" onClick={addProductHandler}>
+          Add to Cart
+        </Button>
+        {admin && (
           <IconButton aria-label="share">
-              <Link to={`/api/product/edit/${props.product._id}`}>
+            <Link to={`/api/product/edit/${props.product._id}`}>
               <EditIcon />
             </Link>
           </IconButton>
-          <OrderForm url={props.product._id}/>
-        </CardActions>
-      </Card>
-    
+        )}
+        <OrderForm url={props.product._id} price={props.product.price}/>
+      </CardActions>
+    </Card>
   );
 };
 

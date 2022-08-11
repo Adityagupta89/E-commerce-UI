@@ -61,7 +61,7 @@ const Cart = () => {
     toast('Order place')
   
   }
-  console.log(products);
+  
   useEffect(() => {
     fetch(`http://localhost:3020/api/user/${user_id}`)
       .then((res) => res.json())
@@ -72,7 +72,7 @@ const Cart = () => {
       })
       .catch((err) => console.log(err));
   }, []);
-  console.log(user);
+  
   return (
     <div className={classes.body}>
         <ToastContainer/>
@@ -93,11 +93,11 @@ const Cart = () => {
           </Grid>
           <Grid
             item
-            sm={4}
+            md={4}
             xs={12}
             sx={{ backgroundColor:'#e7e6e6' ,padding:'2rem'}}
           >
-            <Stack sx={{ justifyContent: "space-between", height: "85%" }}>
+            <Stack sx={{ justifyContent: "space-between", height: "400px" }}>
             <Typography variant="h4" component="div">
                 Shipping Address
                 <hr/>
@@ -125,7 +125,7 @@ const Cart = () => {
                 <Box> Total Amount </Box>
                 <Box> {totalAmount}</Box>
               </Typography>
-              <Button color="primary" variant="contained" onClick={orderHandler}>
+              <Button color="primary" type="submit" variant="contained" onClick={orderHandler}>
                 Place Order
               </Button>
             </Stack>

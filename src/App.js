@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 const App = () => {
   const [search, setSearch] = useState();
   const admin = useSelector((state) => state.auth.isAdmin);
-  console.log(admin)
+  
   const searchHandler = (data) => {
     setSearch(data);
   };
@@ -24,13 +24,13 @@ const App = () => {
     <>
       <Header search={searchHandler} />
       <Routes>
-         <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />  
         <Route element={<ProtectRoute/>}>
         <Route path="/" element={<Home searchData={search} />} />
         <Route path="/api/product/:id" element={<Product/>} />      
         <Route path="/api/cart/" element={<Cart/>} />      
-        <Route path="/api/order" element={<Order/>} />   
+        <Route path="/api/order" element={<Order searchData={search}/>} />   
         <Route path="/api/profile" element={<Profile/>} />  
         {admin && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
         {admin && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}

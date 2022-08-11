@@ -8,21 +8,24 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import {Button} from "@mui/material";
+import { Link } from "react-router-dom";
 import { positions } from "@mui/system";
+import { useSelector } from "react-redux";
 import { useMemo } from "react";
 const Home = (props) => {
   const [products, setProducts] = useState([]);
-  const [sort, setSort] = useState('');
-
+  const [sort, setSort] = useState("");
+  const admin = useSelector((state) => state.auth.isAdmin);
   const handleChange = (event) => {
     setSort(event.target.value);
   };
   useMemo(() => {
-    if (sort === 'name') {
+    if (sort === "name") {
       const result = products.sort((a, b) => a.name.localeCompare(b.name));
       setProducts(result);
     }
-    if (sort === 'price') {
+    if (sort === "price") {
       const result = products.sort((a, b) => +a.price - +b.price);
       setProducts(result);
     }
@@ -48,6 +51,14 @@ const Home = (props) => {
             mr: "2rem",
           }}
         >
+        {admin &&(<Button variant="outlined" color='primary' sx={{mr:'1rem'}}>   
+            <Link
+              to="api/product/"
+              style={{ textDecoration: "none",  }}
+            >
+              Add
+            </Link>
+          </Button>)}
           <FormControl sx={{ minWidth: "12rem" }}>
             <InputLabel id="demo-simple-select-label">Sort</InputLabel>
             <Select
@@ -57,8 +68,8 @@ const Home = (props) => {
               label="Sort"
               onChange={handleChange}
             >
-              <MenuItem value='name'>Name</MenuItem>
-              <MenuItem value='price'>Price</MenuItem>
+              <MenuItem value="name">Name</MenuItem>
+              <MenuItem value="price">Price</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -75,7 +86,7 @@ const Home = (props) => {
                 return product;
             })
             .map((product) => (
-              <Grid item key={product.id} xs={6} sm={4}>
+              <Grid item key={product.id} xs={12} sm={6} lg={4}>
                 <NoteCard product={product} />
               </Grid>
             ))}

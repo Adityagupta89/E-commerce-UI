@@ -18,6 +18,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import {Chip} from "@mui/material";
 // import {Grid} from '@mui/material';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -65,7 +66,11 @@ export default function Header(props) {
   const [search, setSearch] = useState("");
   const dispatch=useDispatch()
   const login = useSelector((state) => state.auth.isLogin);
+  const products = useSelector((state) => state.cart.product);
   const navigate=useNavigate();
+  const numberOfCartItems = products.reduce((curNumber, product) => {
+    return curNumber + product.size;
+  }, 0);
   const buttonHandle=()=>{
     dispatch(authAction.admin({value:false}))
     dispatch(authAction.logout());
@@ -76,13 +81,14 @@ export default function Header(props) {
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-       { login &&(<Stack direction="row">
+       { login &&(<Stack direction="row" sx={{width:'30%'}}>
           <Button color="inherit" ><Link to='/' style={{textDecoration:'none',color:'white'}}>Product</Link></Button>
           <Button color="inherit"> <Link to='api/order/' style={{textDecoration:'none',color:'white'}}>Order</Link></Button>
-          <Button color="inherit"> <Link to='api/product/' style={{textDecoration:'none',color:'white'}}>Add</Link></Button>
+          
         </Stack>)}
         { login && (<div className={classes.search}>
-          <Search onChange={(e) => setSearch(e.target.value)}>
+          <Stack flexDirection='row' alignItems='center' justifyContent='flex-end' sx={{width:'100%'}} >
+          <Search onChange={(e) => setSearch(e.target.value)} sx={{width:'50%'}}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -91,13 +97,17 @@ export default function Header(props) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Link to='api/profile'>
-          <AccountCircleIcon />
+          <Link to='api/profile' >
+          <AccountCircleIcon sx={{fontSize:'1.8rem',m:'10px'}} />
           </Link>
-          <Link to='api/cart/'>
-          <ShoppingCartIcon  />
+          <Box sx={{backgroundColor:'#165ba0',borderRadius:'20px',width:'100px',p:'5px',m:'10px'}}>
+          <Link to='api/cart/' style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}} >
+          <ShoppingCartIcon sx={{fontSize:'1.8rem',textAlign:'center'}}  />
+          <Chip label={numberOfCartItems} sx={{fontSize:'1.5rem',cursor:'pointer'}} filled/>
           </Link>
+          </Box>
           <LogoutIcon onClick={buttonHandle} sx={{cursor:'pointer'}}/> 
+          </Stack>
         </div>)}
       </Toolbar>
     </AppBar>

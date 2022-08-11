@@ -14,6 +14,7 @@ import { useState } from 'react';
 import {Chip} from '@mui/material';
 import {Divider} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import PasswordForm from '../UI/PasswordForm';
 const Profile = () => {
     const navigate=useNavigate();
     const [firstname, setFirstName] = useState("");
@@ -67,7 +68,7 @@ const Profile = () => {
   return (
     <>
         <ToastContainer/>
-    <Box sx={{height:'20vh',backgroundColor:'#b3c2b3'}}>
+    <Box sx={{height:'20vh',backgroundColor:'#abb1ab'}}>
         <Stack spacing={2} sx={{display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center',height:'100%',width:'100vw'}}>
         <Typography variant="h5" component="div" sx={{width:'55%'}}>
         <PersonIcon/> {`${user?.first_name} ${user?.last_name}`}
@@ -112,23 +113,6 @@ const Profile = () => {
                
               />
             </Grid>
-          
-     
-          <Grid sx={{ mb: 2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-          <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Password
-              </Typography>
-            <TextField
-              id="outlined-basic4"
-              //   sx={{ mt: "1rem" }} 
-              placeholder="password"
-              onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
-              
-              type="password"
-              fullWidth
-            />
-          </Grid>
           <Grid sx={{ mb: 2 ,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
                 Mobile Number
@@ -245,15 +229,17 @@ const Profile = () => {
               fullWidth
             />
           </Grid>
+          <Stack direction="row" justifyContent='center'>
           <Button
             type="Submit"
             color="primary"
-            sx={{ mt: ".5rem" }}
-            variant="contained"
-            fullWidth
+            sx={{mr:'2rem',height:'36px',mt:'.7rem',ml:'6.5rem'}}
+            variant="contained" 
           >
             Update
           </Button>
+          <PasswordForm email={user?.email}/>
+          </Stack>
         </form>
         </Stack>
     </Grid>

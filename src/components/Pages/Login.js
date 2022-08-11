@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { authAction } from '../redux/authSlice';
+import EmailForm from '../UI/EmailForm';
 const paperStyling={width:'20vw',margin: '10rem auto',padding:'20px'}
 const Login = () => {
     const dispatch=useDispatch();
@@ -62,17 +63,19 @@ const Login = () => {
         <Paper elevation={20} style={paperStyling}>
             <Grid align="center">
             <Avatar style={{backgroundColor:"green"}}><LockOpenOutlinedIcon/></Avatar>
-            <h2>Signin</h2>
+            <h2 style={{marginTop:'.5rem'}}>Login</h2>
             </Grid>
             <form onSubmit={handleSubmit}>
             <Grid>
             <TextField  id="standard-basic1"sx={{mt:'1rem'}} label="Username" onChange={(e)=>setUsername(e.target.value)} placeholder='Username' variant="standard" required fullWidth/>
             <TextField id="standard-basic2" sx={{mt:'1.5rem'}} label="Password" placeholder='Password' onChange={(e)=>setPassword(e.target.value)} type="password" variant="standard" required fullWidth/>
-            <Button type="Sumbit" color="primary" sx={{mt:'2rem'}} variant='contained' fullWidth>Sign in</Button>
+            <Button type="Sumbit" color="primary" sx={{mt:'2rem'}} variant='contained' fullWidth>Login</Button>
             </Grid>
             </form>
-            <Typography sx={{mt:'2rem'}}>
-                Create a new account ? <Link to="/signup">Sign up</Link>
+            
+            <EmailForm/>
+            <Typography sx={{mt:'.5rem'}}>
+                Create a new account ? <Link to="/signup" style={{textDecoration:'none'}}>Sign up</Link>
             </Typography>
         </Paper>
 

@@ -23,17 +23,17 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useEffect,useState } from 'react';
 import { Stack } from '@mui/material';
-function createData(name,Email,Mobile_No,Category,Price,City,Order_date,) {
-    let date=new Date(Order_date);
+function createData(name,email,mobile_no,category,price,city,order_date,) {
+    let date=new Date(order_date);
     date=date.toLocaleDateString('en-US')
-    console.log(date)
+    
   return {
     name,
-    Email,
-    Mobile_No,
-    Category,
-    Price,
-    City,
+    email,
+    mobile_no,
+    category,
+    price,
+    city,
     date,
   };
 }
@@ -108,7 +108,7 @@ const headCells = [
   },
   {
     id: 'order_date',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Order_date',
   },
@@ -216,15 +216,15 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function Order() { 
+export default function Order(props) { 
   const [orderData,setOrderData]=useState([]);
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('price');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  console.log(orderData)
+  
   const token=localStorage.getItem('token')
   useEffect(() => {
     fetch(`http://localhost:3020/api/order/`, {
@@ -236,7 +236,16 @@ export default function Order() {
       .then((res) => res.json())
       .then((res) => setOrderData(res));
   }, []);
-  const rows = orderData.map(order=>createData(order.product.name,order.user.email,order.user.mobile_no,
+  
+  const rows = orderData.filter((order) => {
+    if (props.searchData == "") return order;
+    else if (
+      order.product.name
+      .toLowerCase()
+        .includes(props.searchData.toLowerCase())
+    )
+      return order;
+  }).map(order=>createData(order.product.name,order.user.email,order.user.mobile_no,
     order.product.category,order.product.price,order.address_info.city,order.order_date))
     
   const handleRequestSort = (event, property) => {
@@ -294,7 +303,9 @@ export default function Order() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Stack sx={{alignItems:'center', height:'80vh',flexDirection:"row"}}>
+    <>
+    
+    <Stack sx={{mt:'5rem', height:'80vh',flexDirection:"row"}}>
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -324,21 +335,15 @@ export default function Order() {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                     
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
+                        
                       </TableCell>
                       <TableCell
                         component="th"
@@ -348,11 +353,11 @@ export default function Order() {
                       >
                         {row.name}
                       </TableCell>
-                      <TableCell align="left">{row.Email}</TableCell>
-                      <TableCell align="left">{row.Mobile_No}</TableCell>
-                      <TableCell align="left">{row.Category}</TableCell>
-                      <TableCell align="left">{row.Price}</TableCell>
-                      <TableCell align="left">{row.City}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="left">{row.mobile_no}</TableCell>
+                      <TableCell align="left">{row.category}</TableCell>
+                      <TableCell align="left">{row.price}</TableCell>
+                      <TableCell align="left">{row.city}</TableCell>
                       <TableCell align="left">{row.date}</TableCell>
                     </TableRow>
                   );
@@ -385,5 +390,6 @@ export default function Order() {
       />
     </Box>
     </Stack>
+    </>
   );
 }

@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function OrderForm(props) {
     const navigate=useNavigate();
   const [open, setOpen] = React.useState(false);
-  const [amount,setAmount]=useState();
   const [address1,setAddress1]=useState();
   const [address2,setAddress2]=useState();
   const [landmark,setLandmark]=useState();
@@ -34,7 +33,7 @@ export default function OrderForm(props) {
     const data={
         user_id:user_id,
         product_id:product_id,
-        amount:amount,
+        amount:props.price,
         address_info:{
             address1:address1,
             address2:address2,
@@ -58,7 +57,7 @@ export default function OrderForm(props) {
             if(res.status===201){
             setTimeout(()=>{
                 navigate('/')
-            },6000)
+            },3000)
             toast(res.msg)
             setOpen(false);
         }
@@ -69,8 +68,8 @@ export default function OrderForm(props) {
   return (
     <div>
         <ToastContainer/>
-      <Button variant="contained" sx={{backgroundColor:'#a1a1a1'}} onClick={handleClickOpen}>
-        Place
+      <Button variant="contained" color='primary' onClick={handleClickOpen}>
+        Buy Now
       </Button>
       <Dialog open={open} onClose={handleClose}>
         {/* <DialogTitle>Subsc</DialogTitle> */}
@@ -86,8 +85,9 @@ export default function OrderForm(props) {
             id="amount"
             label="amount"
             type="number"
-            onChange={(e)=>setAmount(e.target.value)}
+            value={props.price}
             fullWidth
+            
             variant="outlined"
             required
           />

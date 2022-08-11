@@ -62,7 +62,7 @@ const AddProduct = (props) => {
           if (res.status === 201) {
             setTimeout(() => {
               navigate("/");
-            }, 6000);
+            }, 3000);
             toast(res.data.msg);
           }
         })
@@ -83,7 +83,7 @@ const AddProduct = (props) => {
           if (res.status === 200) {
             setTimeout(() => {
               navigate("/");
-            }, 6000);
+            }, 3000);
             toast(res.data.msg);
             console.log(res);
           }
@@ -100,14 +100,16 @@ const AddProduct = (props) => {
         {props.page === "add" ? "Add new Product" : "Edit new Product"}{" "}
       </Typography>
       <Stack sx={{ ml: "3rem" }}>
+        <Grid sx={{height:'10%'}}>
         <Typography variant="h5">
           {props.page === "add" ? "Add new properties" : "Edit new properties"}{" "}
         </Typography>
-        <Typography variant="subtitle1" sx={{ mt: ".5rem", color: grey[700] }}>
+        <Typography variant="subtitle1" sx={{ mt: ".5rem", color: grey[700],mb:'.1rem' }}>
           properties let you define extra product data,such as weight or
           quantity.
         </Typography>
-        <Stack sx={{ justifyContent: "space-evenly", height: "95vh" }}>
+        </Grid>
+        <Stack sx={{ justifyContent: "space-evenly" }}>
           <form onSubmit={handleSumbit} enctype="multipart/form-data">
             <Grid>
               <Typography variant="h5">Name</Typography>

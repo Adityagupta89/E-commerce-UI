@@ -41,6 +41,7 @@ const Signup = () => {
             address1:address1,
             address2:address2,
             city:city,
+            landmark:landmark,
             pincode:pincode,
         } 
     }
@@ -59,7 +60,7 @@ const Signup = () => {
             if(res.status===201){
             setTimeout(()=>{
                 navigate('/')
-            },6000)
+            },3000)
             toast(res.msg)
         }
         })
@@ -72,7 +73,7 @@ const Signup = () => {
     <ToastContainer/>
     <Grid >
       <Paper elevation={20} style={paperStyling}>
-        <Grid align="center">
+        <Grid align="center" sx={{mb:'1rem'}}>
           <Avatar style={{ backgroundColor: "green" }}>
             <LockOpenIcon />
           </Avatar>
@@ -210,13 +211,13 @@ const Signup = () => {
           <Grid sx={{ mb: 2 }}>
             <TextField
               id="outlined-basic11"
-              //   sx={{ mt: "1rem" }}
-
+              label="DOB"
               placeholder="DOB"
               variant="outlined"
               onChange={(e) => setDate(e.target.value)}
               required
               type="date"
+              InputLabelProps={{shrink:true}}
               fullWidth
             />
           </Grid>

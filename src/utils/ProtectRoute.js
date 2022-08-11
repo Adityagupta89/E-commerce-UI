@@ -3,7 +3,7 @@ import { Navigate,Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 const ProtectRoute = () => {
     let auth=useSelector((state)=>state.auth.isLogin)
-    console.log(auth)
+    
   return (
     auth?<Outlet/>:<Navigate to='/login'/>
   )

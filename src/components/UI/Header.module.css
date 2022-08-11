@@ -1,8 +1,8 @@
 .search{
     display: flex;
     align-items: center;
-    justify-content: space-around;
-     width: 20rem;  
+    justify-content: flex-end;
+    width:80%;  
 }
 .icon{
     display: flex;
