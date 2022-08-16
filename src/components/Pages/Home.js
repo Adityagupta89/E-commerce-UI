@@ -8,10 +8,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { positions } from "@mui/system";
 import { useSelector } from "react-redux";
+import classes from "./Home.module.css";
 import { useMemo } from "react";
 const Home = (props) => {
   const [products, setProducts] = useState([]);
@@ -42,7 +43,7 @@ const Home = (props) => {
   }, []);
   return (
     <>
-      <Container sx={{ mt: 8 }}>
+      <Grid className={classes.card} sx={{ mt: 8, m: "auto" }}>
         <Box
           sx={{
             minWidth: 120,
@@ -51,27 +52,37 @@ const Home = (props) => {
             mr: "2rem",
           }}
         >
-        {admin &&(<Button variant="outlined" color='primary' sx={{mr:'1rem'}}>   
-            <Link
-              to="api/product/"
-              style={{ textDecoration: "none",  }}
-            >
-              Add
+          {admin && (
+            <Link to="api/product/" style={{ textDecoration: "none" }}>
+              <Button
+                variant="outlined"
+                sx={{
+                  mr: "1rem",
+                  color: "#696969",
+                  borderColor: "#d6d6d6",
+                  width: "175px",
+                  height: "54px",
+                }}
+              >
+                Create Product
+              </Button>
             </Link>
-          </Button>)}
-          <FormControl sx={{ minWidth: "12rem" }}>
-            <InputLabel id="demo-simple-select-label">Sort</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={sort}
-              label="Sort"
-              onChange={handleChange}
-            >
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="price">Price</MenuItem>
-            </Select>
-          </FormControl>
+          )}
+          <div className={classes.sort}>
+            <FormControl sx={{ minWidth: "12rem" }}>
+              <InputLabel id="demo-simple-select-label">Sort</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={sort}
+                label="Sort"
+                onChange={handleChange}
+              >
+                <MenuItem value="name">Name</MenuItem>
+                <MenuItem value="price">Price</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         </Box>
 
         <Grid container>
@@ -86,12 +97,12 @@ const Home = (props) => {
                 return product;
             })
             .map((product) => (
-              <Grid item key={product.id} xs={12} sm={6} lg={4}>
+              <Grid item key={product.id} xs={12} sm={4} lg={3}>
                 <NoteCard product={product} />
               </Grid>
             ))}
         </Grid>
-      </Container>
+      </Grid>
     </>
   );
 };

@@ -1,15 +1,21 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Grid } from "@mui/material";
+import { Grid, Stack, Button } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Typography } from "@mui/material";
+import OrderForm from "../UI/OrderForm";
+import { useDispatch } from "react-redux";
+import { cartAction } from "../redux/cartSlice";
 const Product = () => {
   const param = useParams();
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({});
   const image = "http://localhost:3020/" + product.product_image;
-
+  const addProductHandler = () => {
+    dispatch(cartAction.addProduct({ product: product }));
+  };
   useEffect(() => {
     fetch(`http://localhost:3020/api/product/${param.id}`, {
       headers: {
@@ -24,11 +30,17 @@ const Product = () => {
   return (
     <>
       <Grid container sx={{ mt: 4 }}>
-        <Grid item xs={12} sm={6}>
-          <Box>
+        <Grid item xs={12} sm={6} sx={{ width: "48%" }}>
+          <Box sx={{ p: "4em" }}>
             <img
               src={image}
-              style={{ width: "80%", height: "70vh", backgroundSize: "cover" }}
+              style={{
+                width: "60%",
+                height: "70vh",
+                backgroundSize: "cover",
+                boxShadow:
+                  "0px 2px 19px 5px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)",
+              }}
             />
           </Box>
         </Grid>
@@ -36,32 +48,47 @@ const Product = () => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
+              mt: "4em",
+              justifyContent: "space-around",
               flexDirection: "column",
-              height: "50%",
+              height: "60vh",
+              // mr:'2em',
+              width: "100%",
             }}
           >
-            <Typography
-              variant="h3"
-              color="text.secondary"
-              sx={{ textAlign: "center" }}
-            >
-              {product.name}
+            <Typography variant="h5" color="text.secondary" sx={{}}>
+              category/{product.category}
             </Typography>
-            <Typography
-              variant="h5"
-              color="text.secondary"
-              sx={{ textAlign: "center" }}
-            >
+            <Typography variant="h3" color="text.secondary">
               {product.description}
             </Typography>
-            <Typography
-              variant="h4"
-              color="text.secondary"
-              sx={{ textAlign: "center" }}
-            >
-              <strong style={{ fontSize: "1.5rem" }}> Price</strong>
+            <Typography variant="h4" color="text.secondary">
               {product.price}
+            </Typography>
+            <Stack flexDirection="row" sx={{ width: "75%" }}>
+              <Button
+                sx={{
+                  backgroundColor: "#4c93d8",
+                  fontSize: "1.3rem",
+                  mr: "2rem",
+                }}
+                variant="contained"
+                onClick={addProductHandler}
+              >
+                Add to Cart
+              </Button>
+              <OrderForm url={product._id} price={product.price} />
+            </Stack>
+            <Typography variant="h3" color="text.secondary">
+              <strong style={{ fontSize: "1.5rem" }}> Product Details</strong>
+              <Typography variant="subtitle1">
+                A smartphone has more advanced features, including web browsing,
+                software applications and a mobile OS. In turn, a smartphone
+                also offers capabilities such as support for biometrics, video
+                chatting, digital assistants and much.A smartphone also has the
+                ability to support accessories, including Bluetooth headphones,
+                power charging cables and extra speakers
+              </Typography>
             </Typography>
           </Box>
         </Grid>

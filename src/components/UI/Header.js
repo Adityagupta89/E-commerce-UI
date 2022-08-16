@@ -14,11 +14,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 import classes from "./Header.module.css";
 import { authAction } from "../redux/authSlice";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {Chip} from "@mui/material";
+import { Chip } from "@mui/material";
 // import {Grid} from '@mui/material';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -64,48 +64,109 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header(props) {
   const [search, setSearch] = useState("");
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const products = useSelector((state) => state.cart.product);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const numberOfCartItems = products.reduce((curNumber, product) => {
     return curNumber + product.size;
   }, 0);
-  const buttonHandle=()=>{
-    dispatch(authAction.admin({value:false}))
+  const buttonHandle = () => {
+    dispatch(authAction.admin({ value: false }));
     dispatch(authAction.logout());
-    localStorage.removeItem('token')
-    navigate('/login');
-  }
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
   props.search(search);
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
-       <Stack direction="row" sx={{width:'30%'}}>
-          <Button color="inherit" ><Link to='/' style={{textDecoration:'none',color:'white'}}>Product</Link></Button>
-          <Button color="inherit"> <Link to='api/order/' style={{textDecoration:'none',color:'white'}}>Order</Link></Button>
-          
+        <Stack direction="row" sx={{ width: "40%" }}>
+          <Button color="inherit">
+            <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+              Product
+            </Link>
+          </Button>
+          <Button color="inherit">
+            {" "}
+            <Link
+              to="api/order/"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              Order
+            </Link>
+          </Button>
         </Stack>
-          <div className={classes.search}>
-          <Stack flexDirection='row' alignItems='center' justifyContent='flex-end' sx={{width:'100%'}} >
-          <Search onChange={(e) => setSearch(e.target.value)} sx={{width:'50%'}}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
+        <div className={classes.search}>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="flex-end"
+            sx={{ width: "100%" }}
+          >
+            <Search
+              className={classes.box3}
+              onChange={(e) => setSearch(e.target.value)}
+              sx={{ width: "50%" }}
+            >
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search By Name"
+                inputProps={{ "aria-label": "search" }}
+              />
+            </Search>
+            <Link to="api/profile">
+              <AccountCircleIcon
+                sx={{
+                  fontSize: "2rem",
+                  ml: "10px",
+                  mr: "10px",
+                  mt: "4px",
+                  color: "#e7e2e2",
+                }}
+              />
+            </Link>
+            <Box
+              sx={{
+                backgroundColor: "#165ba0",
+                borderRadius: "20px",
+                width: "100px",
+                p: "5px",
+                m: "10px",
+              }}
+            >
+              <Link
+                to="api/cart/"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <ShoppingCartIcon
+                  sx={{
+                    fontSize: "1.8rem",
+                    textAlign: "center",
+                    color: "#e7e2e2",
+                  }}
+                />
+                <Chip
+                  label={numberOfCartItems}
+                  sx={{
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                    backgroundColor: "#1c6cbb",
+                  }}
+                  outlined
+                />
+              </Link>
+            </Box>
+            <LogoutIcon
+              onClick={buttonHandle}
+              sx={{ cursor: "pointer", fontSize: "2rem" }}
             />
-          </Search>
-          <Link to='api/profile' >
-          <AccountCircleIcon sx={{fontSize:'2.2rem',m:'10px'}} />
-          </Link>
-          <Box sx={{backgroundColor:'#165ba0',borderRadius:'20px',width:'100px',p:'5px',m:'10px'}}>
-          <Link to='api/cart/' style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}} >
-          <ShoppingCartIcon sx={{fontSize:'1.8rem',textAlign:'center'}}  />
-          <Chip label={numberOfCartItems} sx={{fontSize:'1.5rem',cursor:'pointer',backgroundColor:'#9b9bb0'}} filled/>
-          </Link>
-          </Box>
-          <LogoutIcon onClick={buttonHandle} sx={{cursor:'pointer'}}/> 
           </Stack>
         </div>
       </Toolbar>

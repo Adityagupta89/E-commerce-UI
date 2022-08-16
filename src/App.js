@@ -36,7 +36,7 @@ const App = () => {
         {admin && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
         {admin && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}
        </Route>
-        <Route path='*' element={<Common/>} />
+        <Route path={'*'} />
       </Routes>
     </>
   );

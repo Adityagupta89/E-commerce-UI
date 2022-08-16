@@ -1,252 +1,491 @@
-import React from 'react'
-import { Box, Container } from '@mui/system'
-import {Stack,Grid} from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
-import { Typography } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import {TextField} from '@mui/material';
-import { useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
-import {Button} from '@mui/material';
-import { useState } from 'react';
-import {Chip} from '@mui/material';
-import {Divider} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import PasswordForm from '../UI/PasswordForm';
+import React from "react";
+import { Box, Container } from "@mui/system";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { Stack, Grid } from "@mui/material";
+import EmailIcon from "@mui/icons-material/Email";
+import { Typography } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import { TextField } from "@mui/material";
+import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { Button } from "@mui/material";
+import { useState } from "react";
+import { Chip } from "@mui/material";
+import { Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import PasswordForm from "../UI/PasswordForm";
+// import profile from "../../images/profile.png";
+import classes from "./Profile.module.css";
+import { useRef } from "react";
+import profile1 from "../../images/profile1.png";
+import { useSelector } from "react-redux";
+import AddressForm from "../UI/AddressForm";
 const Profile = () => {
-    const navigate=useNavigate();
-    const [firstname, setFirstName] = useState("");
-    const [lastname, setLastName] = useState("");
-    const [password, setPassword] = useState("");
-    const [mob, setMob] = useState();
-    const [address1, setAddress1] = useState("");
-    const [address2, setAddress2] = useState("");
-    const [landmark, setLandmark] = useState("");
-    const [city, setCity] = useState("");
-    const [pincode, setPincode] = useState();
-    const [date, setDate] = useState("");
-    const [user,setUser]=useState('');
-    const user_id=localStorage.getItem('user_id')
-    useEffect(() => {
-        fetch(`http://localhost:3020/api/user/${user_id}`)
-          .then((res) => res.json())
-          .then((res) => setUser(res.data))
-          .catch(err=>console.log(err));
-      }, []);
-      const handleSubmit=(e)=>{
-        e.preventDefault();
-        const data={
-            first_name:firstname?firstname:user?.first_name,
-            last_name:lastname?lastname:user?.last_name,
-            password:password?password:user?.password.Box,
-            mobile_no:mob?mob:user?.mobile_no,
-            address_info:{
-                address1:address1?address1:user?.address_info?.address1,
-                address2:address2?address2:user?.address_info?.address2,
-                city:city?city:user?.address_info?.city,
-                landmark:landmark?landmark:user?.address_info?.landmark,
-                pincode:pincode?pincode:user?.address_info?.pincode
-            },
-            dob:date?date:user?.dob,
-        }
-        axios.put(`http://localhost:3020/api/user/${user_id}`, data)
-        .then((res) => {
-          if (res.status === 400) toast(res.data.msg);
-          if (res.status === 404) toast(res.data.msg);
-          if (res.status === 200) {
-            setTimeout(() => {
-              navigate("/");
-            }, 6000);
-            toast(res.data.msg);
-    
-          }
-        }).catch((err) => toast(err.response.data.msg));
+  const navigate = useNavigate();
+  const admin = useSelector((state) => state.auth.isAdmin);
+  const [date, setDate] = useState("");
+  
+  const [user, setUser] = useState({
+    first_name:"",
+    last_name:"",
+    mobile_no:"",
+    password:"",
+    user_image:"",
+    _id:"",
+    address_info:[{
+      address1:'',
+      address2:'',
+      landmark:'',
+      city:'',
+      pincode:'',
+    }]
+  });
+  const [file,setFile]=useState();
+  
+  const user_id = localStorage.getItem("user_id");
+  const handleChange=(e)=>{
+    setUser(prev=>({...prev,[e.target.name]:e.target.value}))
+  }
+  const handleAddressChange=(e)=>{
+    const id=e.target.id;
+    const name=e.target.name;
+    console.log(name)
+    setUser(prev=>{
+      const address_info=prev.address_info.map(address=>{
+        if(address._id===id)
+        return {
+          ...address,
+         [name]:e.target.value
+        };
+        else return address
+      });
+      return {
+        ...prev,
+        address_info:address_info,
       }
-      
+    })
+  }
+  const handlePrimaryAddress=(e)=>{
+    const id=e.target.id;
+    if(!e.target.value)
+    return;
+    setUser(prev=>{
+      const address_info=prev.address_info.map(address=>{
+        if(address._id===id)
+        return {
+          ...address,
+         primary:true,
+        };
+        else return {
+          ...address,
+          primary:false
+        }
+      });
+      return {
+        ...prev,
+        address_info:address_info,
+      }
+    })
+  }
+  console.log(user)
+  const values = {
+    someDate: "2017-05-24"
+  };
+  const inputFile = useRef(null);
+  const handleFileChange = event => {
+    const fileObj = event.target.files && event.target.files[0];
+    if (!fileObj) {
+      return;
+    }
+    setFile(fileObj);
+  }
+  const onButtonClick = async() => {
+    inputFile.current.click();
+  }
+  
+  useEffect(()=>{
+  
+    const updateFile= async()=>{
+    if(file){
+      const formData = new FormData();
+      formData.append("profileImage", file);
+      console.log(typeof(file))
+
+      await axios.put(`http://localhost:3020/api/user/${user_id}`,formData) 
+          .then(res=>{
+              console.log(res)
+              if(res.data.status===400)
+              toast(res.data.msg)
+              if(res.data.status===200){
+              
+              toast(
+                "Image Updated"
+              )
+          }
+          }).catch((err) => toast(err.response.data.msg));
+        }
+      }
+      updateFile();
+  },[file])
+   
+  
+  useEffect(() => {
+    if(user_id){
+    fetch(`http://localhost:3020/api/user/${user_id}`)
+      .then((res) => res.json())
+      .then((res) => setUser(res.data))
+      .catch((err) => console.log(err));
+    }
+  }, [file]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:3020/api/user/${user_id}`,user)
+      .then((res) => {
+        if (res.status === 400) toast(res.data.msg);
+        if (res.status === 404) toast(res.data.msg);
+        if (res.status === 200) {
+          setTimeout(() => {
+            navigate("/");
+          }, 6000);
+          toast(res.data.msg);
+        }
+      })
+      .catch((err) => toast(err.response.data.msg));
+  };
+
   return (
     <>
-        <ToastContainer/>
-    <Box sx={{height:'20vh',backgroundColor:'#abb1ab'}}>
-        <Stack spacing={2} sx={{display:'flex',flexDirection:'column',alignItems:'center', justifyContent:'center',height:'100%',width:'100vw'}}>
-        <Typography variant="h5" component="div" sx={{width:'55%'}}>
-        <PersonIcon/> {`${user?.first_name} ${user?.last_name}`}
-        </Typography>
-      
-        <Typography variant="h5" component="div" sx={{width:'55%'}}>
-        <EmailIcon/> {`${user?.email}`}
-        </Typography>
-      
-       </Stack>
-    </Box>
-    <Container sx={{marginTop:'5rem'}}>
-    <Grid spacing={2} container sx={{justifyContent:'center'}}>
-       <Stack  sx={{width:'60%'}}>
-        <form onSubmit={handleSubmit} > 
-            <Grid sx={{ mb: 2,display:'flex',alignItems:'center',justifyContent:'space-between' }} >
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                First Name
-              </Typography>
-              <TextField
-                id="outlined-basic1"
-                //   sx={{ mt: "1rem" }}
-                placeholder={`${user?.first_name}`}
-                variant="outlined"
-                onChange={(e) => setFirstName(e.target.value)}
-                fullWidth
-                
-              />
-            </Grid>
-            <Grid sx={{ mb: 2 ,display:'flex',alignItems:'center',justifyContent:'space-between'}} >
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                last Name
-              </Typography>
-              <TextField
-                id="outlined-basic2"
-                //   sx={{ mt: "1rem" }}
-                
-                placeholder={`${user?.last_name}`}
-                onChange={(e) => setLastName(e.target.value)}
-                variant="outlined"
-                fullWidth
-               
-              />
-            </Grid>
-          <Grid sx={{ mb: 2 ,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-          <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Mobile Number
-              </Typography>
-            <TextField
-              id="outlined-basic5"
-              //   sx={{ mt: "1rem" }}
-              
-              placeholder={`${user?.mobile_no}`}
-              onChange={(e) => setMob(e.target.value)}
-              variant="outlined"
-              disabled
-              type="number"
-              fullWidth
-            />
-            
-          </Grid>
-           <Divider>
-            <Chip label="Address"/>
-           </Divider>
-            <Grid sx={{ mb: 2,mt:2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Address 1
-              </Typography>
-              <TextField
-                id="outlined-basic6"
-                //   sx={{ mt: "1rem" }}
-                
-                placeholder={`${user?.address_info?.address1}`}
-                onChange={(e) => setAddress1(e.target.value)}
-                variant="outlined"
-                fullWidth
-                
-              />
-            </Grid>
-            <Grid sx={{ mb: 2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Address 2
-              </Typography>
-              <TextField
-                id="outlined-basic7"
-                //   sx={{ mt: "1rem" }}
-                
-                onChange={(e) => setAddress2(e.target.value)}
-                placeholder={`${user?.address_info?.address2}`}
-                variant="outlined"
-                fullWidth
-                
-              />
-            </Grid>
-          
-          
-            <Grid sx={{ mb: 2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Landmark
-              </Typography>
-              <TextField
-                id="outlined-basic8"
-                //   sx={{ mt: "1rem" }}
-                
-                placeholder={`${user?.address_info?.landmark}`}
-                onChange={(e) => setLandmark(e.target.value)}
-                variant="outlined"
-                
-                fullWidth
-              />
-            </Grid>
-
-            <Grid sx={{ mb: 2 ,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                City
-              </Typography>
-              <TextField
-                id="outlined-basic9"
-                //   sx={{ mt: "1rem" }}
-                
-                placeholder={`${user?.address_info?.city}`}
-                onChange={(e) => setCity(e.target.value)}
-                variant="outlined"
-                fullWidth
-                
-              />
-            </Grid>
-            <Grid sx={{ mb: 2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-            <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                Pincode
-              </Typography>
-              <TextField
-                id="outlined-basic10"
-                //   sx={{ mt: "1rem" }}
-               
-                placeholder={`${user?.address_info?.pincode}`}
-                onChange={(e) => setPincode(e.target.value)}
-                type="number"
-                variant="outlined"
-                fullWidth
-            
-              />
-            </Grid>
-        <Divider/>
-          <Grid sx={{ mb: 2,mt:2,display:'flex',alignItems:'center',justifyContent:'space-between' }}>
-          <Typography variant="subtitle1" component="div" sx={{width:'20%',textAlign:'center',mr:'2rem'}}>
-                DOB
+      <ToastContainer />
+      <Box sx={{ height: "20vh", backgroundColor: "#e5e8ed" }}>
+        <Stack
+          spacing={2}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            width: "100vw",
+          }}
+        >
+          <Typography variant="h5" component="div" sx={{ width: "55%" }}>
+            <PersonIcon /> {`${user?.first_name} ${user?.last_name}`}
           </Typography>
-          
-            <TextField
-              id="outlined-basic11"
-              //   sx={{ mt: "1rem" }}
-              defaultValue={`${user?.dob}`}
-              variant="outlined"
-              onChange={(e) => setDate(e.target.value)}
-              InputLabelProps={{ shrink: true, required: true }}
-              type="date"
-              fullWidth
+          <Typography variant="h5" component="div" sx={{ width: "55%" }}>
+            <EmailIcon /> {`${user?.email}`}
+          </Typography>
+          <div className={classes.box} onClick={onButtonClick}>
+            <input
+              type="file"
+              id="file"
+              ref={inputFile}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
             />
-          </Grid>
-          <Stack direction="row" justifyContent='center'>
-          <Button
-            type="Submit"
-            color="primary"
-            sx={{mr:'2rem',height:'36px',mt:'.7rem',ml:'6.5rem'}}
-            variant="contained" 
-          >
-            Update
-          </Button>
-          <PasswordForm email={user?.email}/>
-          </Stack>
-        </form>
+            {admin && <img className={classes.box1} src={profile1} alt="" />}
+            {!admin && (
+              <img
+                className={classes.box1}
+                src={"http://localhost:3020/" + user.user_image}
+                alt="empty"
+              />
+            )}
+          </div>
         </Stack>
-    </Grid>
- 
-    </Container>
-    </>
-  )
-}
+      </Box>
+      <Container sx={{ marginTop: "5rem" }}>
+        <Grid spacing={2} container sx={{ justifyContent: "center" }}>
+          <Stack sx={{ width: "60%" }}>
+            <form onSubmit={handleSubmit}>
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  First Name
+                </Typography>
+                <TextField
+                  id="outlined-basic1"
+                  name="first_name"
+                  placeholder={`${user?.first_name}`}
+                  variant="outlined"
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  last Name
+                </Typography>
+                <TextField
+                  id="outlined-basic2"
+                  //   sx={{ mt: "1rem" }}
+                  name='last_name'
+                  placeholder={`${user?.last_name}`}
+                  onChange={handleChange}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  Mobile Number
+                </Typography>
+                <TextField
+                  id="outlined-basic5"
+                  //   sx={{ mt: "1rem" }}
+                  name="mobile_no"
+                  placeholder={`${user?.mobile_no}`}
+                  variant="outlined"
+                  disabled
+                  type="number"
+                  fullWidth
+                />
+              </Grid>
+              {user?.address_info?.map(address=>{
+              return (<div>
+                <Divider>
+                <Chip label="Address" />
+              </Divider>
+                <Grid
+                sx={{
+                  mb: 2,
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  Address 1
+                </Typography>
+                <TextField
+                  name="address1"
+                  //   sx={{ mt: "1rem" }}
+                  id={address._id}
+                  placeholder={address.address1}
+                  onChange={handleAddressChange}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  Address 2
+                </Typography>
+                <TextField
+                  name="address2"
+                  //   sx={{ mt: "1rem" }}
+                  id={address._id}
+                  onChange={handleAddressChange}
+                  placeholder={address.address2}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
 
-export default Profile
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  Landmark
+                </Typography>
+                <TextField
+                  id="outlined-basic8"
+                  //   sx={{ mt: "1rem" }}
+                  name={address._id}
+                  placeholder={address.landmark}
+                  onChange={handleAddressChange}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  City
+                </Typography>
+                <TextField
+                  name="city"
+                  //   sx={{ mt: "1rem" }}
+                  id={address._id}
+                  placeholder={address.city}
+                  onChange={handleAddressChange}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  mb: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  Pincode
+                </Typography>
+                <TextField
+                  name="pincode"
+                  //   sx={{ mt: "1rem" }}
+                  id={address._id}
+                  placeholder={address.pincode}
+                  onChange={handleAddressChange}
+                  type="number"
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+              <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "25%", textAlign: "center", mr: "2rem" }}
+                >
+              
+                  <FormGroup>
+                  <FormControlLabel control={<Checkbox defaultChecked={address.primary} onChange={handlePrimaryAddress} id={address._id} />} label="Primary Address" />
+                  </FormGroup>
+                 
+                </Typography>
+             
+
+              {/* <Stack alignItems='end'>
+                <Button 
+                  id={address._id}
+                  onClick={handlePrimaryAddress}
+                  color="primary"
+                  sx={{ mr:'1.3rem',  height: "35px", mt: ".7rem",width:'50px' }}
+                  variant="contained"
+                >
+                  Update
+                </Button>
+              </Stack> */}
+              </div>)
+              })}
+              <Divider />
+              <Grid
+                sx={{
+                  mb: 2,
+                  mt: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="subtitle1"
+                  component="div"
+                  sx={{ width: "20%", textAlign: "center", mr: "2rem" }}
+                >
+                  DOB
+                </Typography>
+
+                <TextField
+                  id="outlined-basic11"
+                  //   sx={{ mt: "1rem" }}
+                  variant="outlined"
+                  sx={{width:'100%'}}
+                  onChange={(e) => setDate(e.target.value)}
+                  InputLabelProps={{ shrink: true, required: true }}
+                  defaultValue={values.someDate}
+                  type="date"
+                  fullWidth
+                />
+              </Grid>
+              <Stack direction="row" justifyContent="center">
+                <Button
+                  type="Submit"
+                  color="primary"
+                  sx={{ mr:'1.3rem',  height: "35px", mt: ".7rem",width:'80px', }}
+                  variant="contained"
+                >
+                  Update
+                </Button>
+               <PasswordForm email={user?.email} />
+               { !admin && <AddressForm email={user?.email}/>}
+              </Stack>
+              </form>
+          </Stack>
+        </Grid>
+      </Container>
+    </>
+  );
+};
+
+export default Profile;

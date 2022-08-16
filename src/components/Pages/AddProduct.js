@@ -137,7 +137,7 @@ const AddProduct = (props) => {
                 onChange={(event) => setPrice(event.target.value)}
               />
               <Typography variant="subtitle1" sx={{ color: grey[700] }}>
-                price for Product{" "}
+                Price for Product{" "}
               </Typography>
             </Grid>
             <Grid>
@@ -152,7 +152,7 @@ const AddProduct = (props) => {
                 onChange={(event) => setWeight(event.target.value)}
               />
               <Typography variant="subtitle1" sx={{ color: grey[700] }}>
-                Weight for Product Item
+                Weight in gram for Product Item
               </Typography>
             </Grid>
             <Grid>

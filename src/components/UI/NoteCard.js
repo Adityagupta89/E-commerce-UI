@@ -48,7 +48,14 @@ const NoteCard = (props) => {
     setExpanded(!expanded);
   };
   return (
-    <Card sx={{ maxWidth: 500, m: 3, borderStyle: "solid" }}>
+    <Card
+      sx={{
+        maxWidth: 500,
+        m: 3,
+        boxShadow:
+          "0px 2px 19px 5px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)",
+      }}
+    >
       <Link
         to={`/api/product/${props.product._id}`}
         style={{ textDecoration: "none" }}
@@ -59,19 +66,27 @@ const NoteCard = (props) => {
               <SendToMobileIcon />
             </Avatar>
           }
+          sx={{ color: "black", fontSize: "20px" }}
           title={props.product.name}
           subheader="September 14, 2016"
         />
       </Link>
       <CardMedia
-        style={{ marginLeft: "2rem" }}
+        style={{ marginLeft: "2rem", width: "80%" }}
         component="img"
         height="300"
         className="img"
         image={"http://localhost:3020/" + props.product.product_image}
         alt="Paella dish"
       />
-      <CardContent sx={{height:'10vh',display:'flex',flexDirection:'column',justifyContent:'space-evenly'}}>
+      <CardContent
+        sx={{
+          height: "10vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-evenly",
+        }}
+      >
         <Typography variant="h6" color="text.secondary">
           {props.product.description}
         </Typography>
@@ -80,8 +95,12 @@ const NoteCard = (props) => {
           {props.product.price}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing sx={{ justifyContent: "space-evenly", }}>
-        <Button color="primary" variant="contained" onClick={addProductHandler}>
+      <CardActions disableSpacing sx={{ justifyContent: "space-evenly" }}>
+        <Button
+          sx={{ backgroundColor: "#4c93d8" }}
+          variant="contained"
+          onClick={addProductHandler}
+        >
           Add to Cart
         </Button>
         {admin && (
@@ -91,7 +110,11 @@ const NoteCard = (props) => {
             </Link>
           </IconButton>
         )}
-        <OrderForm url={props.product._id} price={props.product.price}/>
+        <OrderForm
+          url={props.product._id}
+          price={props.product.price}
+          value={true}
+        />
       </CardActions>
     </Card>
   );
