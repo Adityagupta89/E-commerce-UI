@@ -15,8 +15,19 @@
     height:185px;
     background-color: #e5e8ed;
 }
+.typo{
+    /* font-size: 1.5rem; */
+}
+
 @media only screen  and (max-width: 1200px) {
     .box{
         display: none;
     }
+    
+  }
+@media only screen  and (max-width: 500px) {
+    .typo{
+        font-size:.8rem;
+    }
+    
   }

@@ -5,22 +5,17 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useState,useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-export default function AddressForm(props) {
-    const navigate=useNavigate();
+
+const AddressForm =(props) =>{
   const [open, setOpen] = React.useState(false);
   const [address1,setAddress1]=useState();
   const [address2,setAddress2]=useState();
   const [landmark,setLandmark]=useState();
   const [city,setCity]=useState();
-  
   const [pincode,setPincode]=useState();
-  const product_id=props.url
-  const user_id=localStorage.getItem('user_id')
   const token=localStorage.getItem('token')
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,7 +23,6 @@ export default function AddressForm(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  
 
   const submitHandler=(e)=>{
     e.preventDefault();
@@ -145,3 +139,5 @@ export default function AddressForm(props) {
     </div>
   );
 }
+
+export default AddressForm;

@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import {Divider} from "@mui/material";
 import { cartAction } from "../redux/cartSlice";
 import "react-toastify/dist/ReactToastify.css";
-
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,11 +19,13 @@ const Cart = () => {
   const [userAddress, setUserAddress] = useState({});
   const user_id = localStorage.getItem("user_id");
   const token = localStorage.getItem("token");
+
   const empty_Cart = (
     <Typography variant="h2" component="div" sx={{ textAlign: "center" }}>
       Product cart is Empty
     </Typography>
   );
+  
   const orderHandler = () => {
     const createOrder = async (product) => {
       const data = {
@@ -69,13 +70,13 @@ const Cart = () => {
         }
       })
       .catch((err) => console.log(err));
-  }, []);
- console.log(userAddress)
+  }, [user_id]);
+ 
   return (
     <div className={classes.body}>
       <ToastContainer />
       <Container sx={{ width: "100vw" }}>
-        {products.length == 0 && empty_Cart}
+        {products.length === 0 && empty_Cart}
         {products.length > 0 && (
           <>
             <Grid container sx={{ mt: "2rem" }}>
@@ -94,7 +95,7 @@ const Cart = () => {
                    Cart ({products.length} items)
                 </Typography>
                 {products.map((product) => (
-                  <ProductCart product={product} />
+                  <ProductCart key={product._id} product={product} />
                 ))}
               </Grid>
               <Grid

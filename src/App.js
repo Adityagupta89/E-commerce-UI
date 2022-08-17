@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import Login from "./components/Pages/Login";
-import Signup from "./components/Pages/Signup";
+import React, { useState } from "react";
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/UI/Header";
 import Product from "./components/Pages/Product";
 import Home from "./components/Pages/Home";
 import AddProduct from "./components/Pages/AddProduct";
-import ProtectRoute from "./utils/ProtectRoute";
-import AdminRoute from "./utils/AdminRoute";
+import ProtectRoute from "./components/Shared/ProtectRoute"
 import Order from "./components/Pages/Order";
 import Common from "./utils/Common";
 import Profile from "./components/Pages/Profile";

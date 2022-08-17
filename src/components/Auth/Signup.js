@@ -10,14 +10,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Input } from "@mui/material";
-
 const paperStyling = {
   width: "25vw",
   // height: "70vh",
   margin: "3rem auto",
   padding: "2rem",
 };
+
 const Signup = () => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
@@ -32,8 +31,8 @@ const Signup = () => {
   const [pincode, setPincode] = useState();
   const [date, setDate] = useState("");
   const navigate = useNavigate();
-  console.log(file);
-  const handleSumbit = (e) => {
+
+  const submitHandler = (e) => {
     e.preventDefault();
     console.log(typeof +pincode);
     console.log(typeof city);
@@ -64,7 +63,7 @@ const Signup = () => {
     formData.append("city", data.address_info.city);
     formData.append("landmark", data.address_info.landmark);
     formData.append("pincode", data.address_info.pincode);
-    console.log(formData);
+    
     const signup = async () => {
       await axios
         .post("http://localhost:3020/api/user", formData)
@@ -82,6 +81,7 @@ const Signup = () => {
     };
     signup();
   };
+  
   return (
     <>
       <ToastContainer />
@@ -93,7 +93,7 @@ const Signup = () => {
             </Avatar>
             <h2>Signup</h2>
           </Grid>
-          <form onSubmit={handleSumbit}>
+          <form onSubmit={submitHandler}>
             <Grid container sx={{ mb: 2 }}>
               <Grid item xs={12} md={6}>
                 <TextField

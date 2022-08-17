@@ -1,10 +1,11 @@
 
 import { createSlice } from "@reduxjs/toolkit";
+
 const initialAuthState={
-    isLogin:false,
-    token:null,
-    isAdmin:false,
-    user_id:''
+    isLogin:localStorage.getItem('islogin')==='true'?true:false,
+    token:localStorage.getItem('token'),
+    isAdmin:localStorage.getItem('isadmin'),
+    user_id:localStorage.getItem('user_id')
 }
 const authSlice=createSlice({
     name:'auth',
@@ -20,7 +21,7 @@ const authSlice=createSlice({
             state.isAdmin=action.payload.value;
         },
         setToken(state,action){
-          state.token=action.payload.token;  
+          state.token=action.payload.value;  
         }
     }
 });

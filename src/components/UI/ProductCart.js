@@ -1,22 +1,20 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
 import { Grid, Stack } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch } from "react-redux";
 import { cartAction } from "../redux/cartSlice";
 import { IconButton } from "@mui/material";
-import { borderRadius } from "@mui/system";
 import { Divider } from "@mui/material";
-export default function ProductCart(props) {
+
+const ProductCart = (props) => {
   const dispatch = useDispatch();
+
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: props.product }));
   };
+
   const removeProductHandler = () => {
     dispatch(cartAction.removeProduct({ id: props.product._id }));
   };
@@ -73,3 +71,5 @@ export default function ProductCart(props) {
     </>
   );
 }
+
+export default ProductCart

@@ -18,17 +18,16 @@ import { Chip } from "@mui/material";
 import { Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PasswordForm from "../UI/PasswordForm";
-// import profile from "../../images/profile.png";
 import classes from "./Profile.module.css";
 import { useRef } from "react";
 import profile1 from "../../images/profile1.png";
 import { useSelector } from "react-redux";
 import AddressForm from "../UI/AddressForm";
+
 const Profile = () => {
   const navigate = useNavigate();
   const admin = useSelector((state) => state.auth.isAdmin);
   const [date, setDate] = useState("");
-  
   const [user, setUser] = useState({
     first_name:"",
     last_name:"",
@@ -42,11 +41,13 @@ const Profile = () => {
       landmark:'',
       city:'',
       pincode:'',
-    }]
+    }],
+    dob:'',
   });
   const [file,setFile]=useState();
-  
+  console.log(user)
   const user_id = localStorage.getItem("user_id");
+
   const handleChange=(e)=>{
     setUser(prev=>({...prev,[e.target.name]:e.target.value}))
   }
@@ -69,6 +70,7 @@ const Profile = () => {
       }
     })
   }
+
   const handlePrimaryAddress=(e)=>{
     const id=e.target.id;
     if(!e.target.value)
@@ -91,10 +93,11 @@ const Profile = () => {
       }
     })
   }
-  console.log(user)
+  
   const values = {
-    someDate: "2017-05-24"
+    someDate: new Date(user.dob).toLocaleDateString('en-CA')
   };
+
   const inputFile = useRef(null);
   const handleFileChange = event => {
     const fileObj = event.target.files && event.target.files[0];
@@ -103,6 +106,7 @@ const Profile = () => {
     }
     setFile(fileObj);
   }
+
   const onButtonClick = async() => {
     inputFile.current.click();
   }
@@ -113,15 +117,12 @@ const Profile = () => {
     if(file){
       const formData = new FormData();
       formData.append("profileImage", file);
-      console.log(typeof(file))
-
       await axios.put(`http://localhost:3020/api/user/${user_id}`,formData) 
           .then(res=>{
               console.log(res)
               if(res.data.status===400)
               toast(res.data.msg)
               if(res.data.status===200){
-              
               toast(
                 "Image Updated"
               )
@@ -130,9 +131,8 @@ const Profile = () => {
         }
       }
       updateFile();
-  },[file])
+  },[file,user_id])
    
-  
   useEffect(() => {
     if(user_id){
     fetch(`http://localhost:3020/api/user/${user_id}`)
@@ -140,9 +140,9 @@ const Profile = () => {
       .then((res) => setUser(res.data))
       .catch((err) => console.log(err));
     }
-  }, [file]);
+  }, [file,user_id]);
 
-  const handleSubmit = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
     axios
       .put(`http://localhost:3020/api/user/${user_id}`,user)
@@ -158,7 +158,6 @@ const Profile = () => {
       })
       .catch((err) => toast(err.response.data.msg));
   };
-
   return (
     <>
       <ToastContainer />
@@ -172,12 +171,13 @@ const Profile = () => {
             justifyContent: "center",
             height: "100%",
             width: "100vw",
+            
           }}
         >
-          <Typography variant="h5" component="div" sx={{ width: "55%" }}>
+          <Typography  variant="h5" component="div" sx={{ width: "55%",fontSize:'1.4rem' }}>
             <PersonIcon /> {`${user?.first_name} ${user?.last_name}`}
           </Typography>
-          <Typography variant="h5" component="div" sx={{ width: "55%" }}>
+          <Typography variant="h5"  component="div" sx={{ width: "55%",fontSize:'1.4rem' }}>
             <EmailIcon /> {`${user?.email}`}
           </Typography>
           <div className={classes.box} onClick={onButtonClick}>
@@ -202,7 +202,7 @@ const Profile = () => {
       <Container sx={{ marginTop: "5rem" }}>
         <Grid spacing={2} container sx={{ justifyContent: "center" }}>
           <Stack sx={{ width: "60%" }}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={submitHandler}>
               <Grid
                 sx={{
                   mb: 2,
@@ -417,7 +417,6 @@ const Profile = () => {
                   component="div"
                   sx={{ width: "25%", textAlign: "center", mr: "2rem" }}
                 >
-              
                   <FormGroup>
                   <FormControlLabel control={<Checkbox defaultChecked={address.primary} onChange={handlePrimaryAddress} id={address._id} />} label="Primary Address" />
                   </FormGroup>
@@ -463,8 +462,9 @@ const Profile = () => {
                   sx={{width:'100%'}}
                   onChange={(e) => setDate(e.target.value)}
                   InputLabelProps={{ shrink: true, required: true }}
-                  defaultValue={values.someDate}
                   type="date"
+                  disabled
+                  value={values.someDate}
                   fullWidth
                 />
               </Grid>

@@ -13,6 +13,7 @@ const Product = () => {
   const dispatch = useDispatch();
   const [product, setProduct] = useState({});
   const image = "http://localhost:3020/" + product.product_image;
+
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: product }));
   };
@@ -25,14 +26,15 @@ const Product = () => {
     })
       .then((res) => res.json())
       .then((res) => setProduct(res));
-  }, []);
-  console.log(product);
+  }, [param.id]);
+  
   return (
     <>
       <Grid container sx={{ mt: 4 }}>
         <Grid item xs={12} sm={6} sx={{ width: "48%" }}>
           <Box sx={{ p: "4em" }}>
             <img
+              alt='Not Found'
               src={image}
               style={{
                 width: "60%",

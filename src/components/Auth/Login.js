@@ -12,13 +12,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { authAction } from '../redux/authSlice';
 import EmailForm from '../UI/EmailForm';
+
 const paperStyling={width:'20vw',margin: '10rem auto',padding:'20px'}
+
 const Login = () => {
     const dispatch=useDispatch();
     const [username,setUsername]=useState('');
     const [password,setPassword]=useState('');
+    
     const navigate=useNavigate();
-    const handleSubmit=(event)=>{
+
+    const SubmitHandler=(event)=>{
         event.preventDefault();
        const data={
           email:username,
@@ -39,47 +43,43 @@ const Login = () => {
             }
             if(res.status===200){
                 localStorage.setItem('token',res.data);
+                localStorage.setItem('islogin',true)
                 dispatch(authAction.login())
-                console.log(res.isAdmin)
-               
+                dispatch(authAction.setToken({value:res.data}))
                 dispatch(authAction.admin({value:res.isAdmin}));
                 localStorage.setItem('user_id',res.user_id)
+                localStorage.setItem('isadmin',res.isAdmin)
                 setTimeout(()=>{
                     navigate('/')
                 },1000)
                 toast(res.msg)
-                
             }
         })
-
     }
     login();
-    
     }
+
   return (
     <>
     <ToastContainer/>
     <Grid >
-        <Paper elevation={20} style={paperStyling}>
+        <Paper elevation={20} style={paperStyling} >
             <Grid align="center">
             <Avatar style={{backgroundColor:"green"}}><LockOpenOutlinedIcon/></Avatar>
             <h2 style={{marginTop:'.5rem'}}>Login</h2>
             </Grid>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={SubmitHandler}>
             <Grid>
             <TextField  id="standard-basic1"sx={{mt:'1rem'}} label="Username" onChange={(e)=>setUsername(e.target.value)} placeholder='Username' variant="standard" required fullWidth/>
             <TextField id="standard-basic2" sx={{mt:'1.5rem'}} label="Password" placeholder='Password' onChange={(e)=>setPassword(e.target.value)} type="password" variant="standard" required fullWidth/>
             <Button type="Sumbit" color="primary" sx={{mt:'2rem'}} variant='contained' fullWidth>Login</Button>
             </Grid>
-            </form>
-            
+            </form> 
             <EmailForm/>
             <Typography sx={{mt:'.5rem'}}>
                 Create a new account ? <Link to="/signup" style={{textDecoration:'none'}}>Sign up</Link>
             </Typography>
         </Paper>
-
-
     </Grid>
     </>
   )

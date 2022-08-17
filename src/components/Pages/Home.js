@@ -1,6 +1,5 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import NoteCard from "../UI/NoteCard";
 import Box from "@mui/material/Box";
@@ -10,17 +9,30 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { positions } from "@mui/system";
 import { useSelector } from "react-redux";
+import Pagination from '@mui/material/Pagination';
+import usePagination from "../../components/Shared/Pagination"
 import classes from "./Home.module.css";
 import { useMemo } from "react";
+
 const Home = (props) => {
   const [products, setProducts] = useState([]);
   const [sort, setSort] = useState("");
+  let [page,setPage]=useState(1);
   const admin = useSelector((state) => state.auth.isAdmin);
+  const PER_PAGE=8;
+  const count = Math.ceil(products.length / PER_PAGE);
+  const _DATA = usePagination(products, PER_PAGE);
+
+  const handleChangePagination = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
+  };
+
   const handleChange = (event) => {
     setSort(event.target.value);
   };
+  
   useMemo(() => {
     if (sort === "name") {
       const result = products.sort((a, b) => a.name.localeCompare(b.name));
@@ -30,7 +42,7 @@ const Home = (props) => {
       const result = products.sort((a, b) => +a.price - +b.price);
       setProducts(result);
     }
-  }, [sort]);
+  }, [sort,products]);
   useEffect(() => {
     fetch("http://localhost:3020/api/product/", {
       headers: {
@@ -53,7 +65,7 @@ const Home = (props) => {
           }}
         >
           {admin && (
-            <Link to="api/product/" style={{ textDecoration: "none" }}>
+            <Link to="api/product/" className={classes.sort} style={{ textDecoration: "none" }}>
               <Button
                 variant="outlined"
                 sx={{
@@ -86,23 +98,34 @@ const Home = (props) => {
         </Box>
 
         <Grid container>
-          {products
+          {_DATA.currentData()
             .filter((product) => {
-              if (props.searchData == "") return product;
+              if (props.searchData === "") return product;
               else if (
                 product.name
                   .toLowerCase()
                   .includes(props.searchData.toLowerCase())
               )
                 return product;
+                else
+                return {}
             })
             .map((product) => (
-              <Grid item key={product.id} xs={12} sm={4} lg={3}>
+              <Grid item key={product.id} xs={12} sm={4} lg={3} sx={{marginBottom:'2rem'}}>
                 <NoteCard product={product} />
               </Grid>
             ))}
         </Grid>
       </Grid>
+      <Pagination
+        count={count}
+        size="large"
+        sx={{display:'flex',justifyContent:'center'}}
+        page={page}
+        variant="outlined"
+        shape="rounded"
+        onChange={handleChangePagination}
+      />
     </>
   );
 };

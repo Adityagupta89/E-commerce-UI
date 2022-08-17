@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
 import { useState } from "react";
-export default function PasswordForm(props) {
+const  PasswordForm = (props) =>{
   const [open, setOpen] = React.useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -22,7 +22,8 @@ export default function PasswordForm(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleSubmit = () => {
+
+  const submitHandler = () => {
     const data = {
       email: props.email,
       oldpassword: oldPassword,
@@ -91,7 +92,7 @@ export default function PasswordForm(props) {
             Cancel
           </Button>
           <Button
-            onClick={handleSubmit}
+            onClick={submitHandler}
             color="primary"
             variant="contained"
             disabled={!oldPassword || !newPassword}
@@ -103,3 +104,4 @@ export default function PasswordForm(props) {
     </div>
   );
 }
+export default PasswordForm

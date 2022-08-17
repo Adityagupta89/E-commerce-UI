@@ -5,12 +5,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export default function OrderForm(props) {
+
+const OrderForm =(props) =>{
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [address1, setAddress1] = useState();
@@ -22,12 +22,14 @@ export default function OrderForm(props) {
   const product_id = props.url;
   const user_id = localStorage.getItem("user_id");
   const token = localStorage.getItem("token");
+
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  
   useEffect(() => {
     if (open) {
       fetch(`http://localhost:3020/api/user/${user_id}`)
@@ -41,7 +43,7 @@ export default function OrderForm(props) {
         )
         .catch((err) => console.log(err));
     }
-  }, [open]);
+  }, [open,user_id]);
 
   const submitHandler = (e) => {
     console.log("Aditya");
@@ -111,6 +113,7 @@ export default function OrderForm(props) {
               id="amount"
               label="amount"
               type="number"
+              InputLabelProps={{ shrink: true }}
               value={props.price}
               fullWidth
               variant="outlined"
@@ -121,8 +124,10 @@ export default function OrderForm(props) {
               margin="dense"
               id="address1"
               label="Address1"
-              value={user[0]?.address1}
+              
               type="text"
+              InputLabelProps={{ shrink: true }}
+              placeholder={user[0]?.address1}
               onChange={(e) => setAddress1(e.target.value)}
               fullWidth
               variant="outlined"
@@ -132,8 +137,9 @@ export default function OrderForm(props) {
               autoFocus
               margin="dense"
               id="address2"
-              value={user[0]?.address2}
+              placeholder={user[0]?.address2}
               label="Address2"
+              InputLabelProps={{ shrink: true }}
               onChange={(e) => setAddress2(e.target.value)}
               type="text"
               fullWidth
@@ -146,7 +152,8 @@ export default function OrderForm(props) {
               id="landmark"
               label="Landmark"
               type="text"
-              value={user[0]?.landmark}
+              placeholder={user[0]?.landmark}
+              InputLabelProps={{ shrink: true }}
               onChange={(e) => setLandmark(e.target.value)}
               fullWidth
               variant="outlined"
@@ -158,7 +165,8 @@ export default function OrderForm(props) {
               id="city"
               label="City"
               type="text"
-              value={user[0]?.city}
+              InputLabelProps={{ shrink: true }}
+               placeholder={user[0]?.city}
               onChange={(e) => setCity(e.target.value)}
               fullWidth
               variant="outlined"
@@ -168,8 +176,9 @@ export default function OrderForm(props) {
               autoFocus
               margin="dense"
               id="pincode"
-              value={user[0]?.pincode}
+              placeholder={user[0]?.pincode}
               onChange={(e) => setPincode(e.target.value)}
+              InputLabelProps={{ shrink: true }}
               label="Pincode"
               type="number"
               fullWidth
@@ -190,3 +199,5 @@ export default function OrderForm(props) {
     </div>
   );
 }
+
+export default OrderForm
