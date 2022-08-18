@@ -38,20 +38,18 @@ const  Header = (props) =>{
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Stack direction="row" sx={{ width: "40%" }}>
         <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-
           <Button color="inherit">
            Product
           </Button>
           </Link>
-          <Button color="inherit">
-            {" "}
-            <Link
+          <Link
               to="api/order/"
               style={{ textDecoration: "none", color: "white" }}
             >
+          <Button color="inherit">
               Order
-            </Link>
           </Button>
+          </Link>
         </Stack>
         <div className={classes.search}>
           <Stack
@@ -117,7 +115,7 @@ const  Header = (props) =>{
                     cursor: "pointer",
                     backgroundColor: "#1c6cbb",
                   }}
-                  outlined
+                  
                 />
               </Link>
             </Box>

@@ -22,7 +22,7 @@ import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
 import { Stack } from "@mui/material";
 
- const Order=(props) => {
+ const Order = (props) => {
   const [orderData, setOrderData] = useState([
     {
       _id: "",
@@ -38,7 +38,7 @@ import { Stack } from "@mui/material";
       },
     },
   ]);
-  
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("price");
   const [selected, setSelected] = React.useState([]);
@@ -92,8 +92,6 @@ import { Stack } from "@mui/material";
     }
     setSelected([]);
   };
-
-  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -308,7 +306,6 @@ const EnhancedTableHead = (props) => {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            // padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel

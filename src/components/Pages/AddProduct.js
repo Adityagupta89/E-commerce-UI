@@ -131,7 +131,7 @@ const AddProduct = (props) => {
               <TextField
                 id="outlined-basic"
                 type="number"
-                placeholder={props.page === "edit" ? product?.price : price}
+                placeholder={props.page === "edit" ? String(product?.price) : String(price)}
                 sx={{ width: "50%" }}
                 variant="outlined"
                 required={props.page==='add'}
@@ -142,11 +142,11 @@ const AddProduct = (props) => {
               </Typography>
             </Grid>
             <Grid>
-              <Typography variant="h5">weight</Typography>
+              <Typography variant="h5">Weight</Typography>
               <TextField
                 id="outlined-basic"
                 type="number"
-                placeholder={props.page === "edit" ? product?.weight : weight}
+                placeholder={props.page === "edit" ? String(product?.weight) : String(weight)}
                 sx={{ width: "50%" }}
                 variant="outlined"
                 required={props.page==='add'}
@@ -194,7 +194,7 @@ const AddProduct = (props) => {
                 id="outlined-basic"
                 sx={{ width: "50%" }}
                 placeholder={
-                  props.page === "edit" ? product?.quantity : quantity
+                  props.page === "edit" ? String(product?.quantity) : (quantity)
                 }
                 variant="outlined"
                 required={props.page==='add'}
@@ -205,7 +205,7 @@ const AddProduct = (props) => {
               </Typography>
             </Grid>
             <Grid>
-              <Typography variant="h5">Image upload</Typography>
+              <Typography variant="h5">Image Upload</Typography>
               <input
                 type="file"
                 style={{ marginTop: ".5rem" }}

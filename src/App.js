@@ -8,15 +8,14 @@ import Home from "./components/Pages/Home";
 import AddProduct from "./components/Pages/AddProduct";
 import ProtectRoute from "./components/Shared/ProtectRoute"
 import Order from "./components/Pages/Order";
-import Common from "./utils/Common";
 import Profile from "./components/Pages/Profile";
 import Cart from "./components/Pages/Cart";
+import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 const App = () => {
   const [search, setSearch] = useState();
   const admin = useSelector((state) => state.auth.isAdmin);
   const login = useSelector((state) => state.auth.isLogin);
-  
   const searchHandler = (data) => {
     setSearch(data);
   };
@@ -32,10 +31,10 @@ const App = () => {
         <Route path="/api/cart/" element={<Cart/>} />      
         <Route path="/api/order" element={<Order searchData={search}/>} />   
         <Route path="/api/profile" element={<Profile/>} />  
-        {admin && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
-        {admin && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}
+        {admin==='true' && (<Route path="/api/product/" element={<AddProduct page="add" />} />)}
+        {admin==='true' && (<Route path="/api/product/edit/:id" element={<AddProduct page="edit" />} />)}
        </Route>
-        <Route path={'*'} />
+        <Route path={'*'} element={<Navigate to='/'/>} />
       </Routes>
     </>
   );

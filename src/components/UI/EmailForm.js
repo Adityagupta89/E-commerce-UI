@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useState } from "react";
-const EmailForm =() =>{
+const EmailForm = () =>{
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = useState();
   const handleClickOpen = () => {
@@ -75,4 +75,4 @@ const EmailForm =() =>{
     </div>
   );
 }
-export default EmailForm
+export default EmailForm;

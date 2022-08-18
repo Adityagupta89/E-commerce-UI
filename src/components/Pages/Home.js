@@ -32,7 +32,7 @@ const Home = (props) => {
   const handleChange = (event) => {
     setSort(event.target.value);
   };
-  
+
   useMemo(() => {
     if (sort === "name") {
       const result = products.sort((a, b) => a.name.localeCompare(b.name));
@@ -64,7 +64,7 @@ const Home = (props) => {
             mr: "2rem",
           }}
         >
-          {admin && (
+          {admin==='true' && (
             <Link to="api/product/" className={classes.sort} style={{ textDecoration: "none" }}>
               <Button
                 variant="outlined"
@@ -107,11 +107,10 @@ const Home = (props) => {
                   .includes(props.searchData.toLowerCase())
               )
                 return product;
-                else
-                return {}
+                
             })
             .map((product) => (
-              <Grid item key={product.id} xs={12} sm={4} lg={3} sx={{marginBottom:'2rem'}}>
+              <Grid item key={product._id} xs={12} sm={4} lg={3} sx={{marginBottom:'2rem'}}>
                 <NoteCard product={product} />
               </Grid>
             ))}

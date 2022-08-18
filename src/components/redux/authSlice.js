@@ -18,7 +18,8 @@ const authSlice=createSlice({
             state.isLogin=false;
         },
         admin(state,action){
-            state.isAdmin=action.payload.value;
+            let bool=action.payload.value;
+            state.isAdmin=bool.toString();
         },
         setToken(state,action){
           state.token=action.payload.value;  

@@ -38,7 +38,7 @@ const cartSlice=createSlice({
             let updateItems;
             if(existItem.size===1)
             {
-                updateItems=state.product.filter(item=>item._id!= existItem._id);
+                updateItems=state.product.filter(item=>item._id!== existItem._id);
             }else{
                 const updateItem={...existItem,size:existItem.size-1};
                 updateItems=[...state.product];

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -20,7 +19,7 @@ import { useSelector } from "react-redux";
 const NoteCard = (props) => {
   const admin = useSelector((state) => state.auth.isAdmin);
   const dispatch = useDispatch();
-  
+
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: props.product }));
   };
@@ -81,7 +80,7 @@ const NoteCard = (props) => {
         >
           Add to Cart
         </Button>
-        {admin && (
+        {admin==='true' && (
           <IconButton aria-label="share">
             <Link to={`/api/product/edit/${props.product._id}`}>
               <EditIcon />
@@ -97,15 +96,7 @@ const NoteCard = (props) => {
     </Card>
   );
 };
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+
+
 
 export default NoteCard;

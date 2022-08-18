@@ -29,7 +29,7 @@ const OrderForm =(props) =>{
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   useEffect(() => {
     if (open) {
       fetch(`http://localhost:3020/api/user/${user_id}`)
@@ -85,7 +85,6 @@ const OrderForm =(props) =>{
     };
     createOrder();
   };
-
   return (
     <div>
       <ToastContainer />
@@ -106,13 +105,11 @@ const OrderForm =(props) =>{
             <DialogContentText sx={{ mb: "1rem", textAlign: "center" }}>
               Please Enter the details and place the order
             </DialogContentText>
-
             <TextField
               autoFocus
               margin="dense"
               id="amount"
               label="amount"
-              type="number"
               InputLabelProps={{ shrink: true }}
               value={props.price}
               fullWidth
@@ -124,8 +121,6 @@ const OrderForm =(props) =>{
               margin="dense"
               id="address1"
               label="Address1"
-              
-              type="text"
               InputLabelProps={{ shrink: true }}
               placeholder={user[0]?.address1}
               onChange={(e) => setAddress1(e.target.value)}
@@ -141,7 +136,6 @@ const OrderForm =(props) =>{
               label="Address2"
               InputLabelProps={{ shrink: true }}
               onChange={(e) => setAddress2(e.target.value)}
-              type="text"
               fullWidth
               required
               variant="outlined"
@@ -151,7 +145,6 @@ const OrderForm =(props) =>{
               margin="dense"
               id="landmark"
               label="Landmark"
-              type="text"
               placeholder={user[0]?.landmark}
               InputLabelProps={{ shrink: true }}
               onChange={(e) => setLandmark(e.target.value)}
@@ -164,7 +157,6 @@ const OrderForm =(props) =>{
               margin="dense"
               id="city"
               label="City"
-              type="text"
               InputLabelProps={{ shrink: true }}
                placeholder={user[0]?.city}
               onChange={(e) => setCity(e.target.value)}
@@ -176,11 +168,12 @@ const OrderForm =(props) =>{
               autoFocus
               margin="dense"
               id="pincode"
-              placeholder={user[0]?.pincode}
-              onChange={(e) => setPincode(e.target.value)}
+              name="pincode"
+              type="number"
               InputLabelProps={{ shrink: true }}
               label="Pincode"
-              type="number"
+              placeholder={`${user[0]?.pincode}`}
+              onChange={(e) => setPincode(e.target.value)}
               fullWidth
               variant="outlined"
               required

@@ -27,11 +27,10 @@ import AddressForm from "../UI/AddressForm";
 const Profile = () => {
   const navigate = useNavigate();
   const admin = useSelector((state) => state.auth.isAdmin);
-  const [date, setDate] = useState("");
   const [user, setUser] = useState({
     first_name:"",
     last_name:"",
-    mobile_no:"",
+    mobile_no:0,
     password:"",
     user_image:"",
     _id:"",
@@ -40,21 +39,19 @@ const Profile = () => {
       address2:'',
       landmark:'',
       city:'',
-      pincode:'',
+      pincode:0,
     }],
     dob:'',
   });
   const [file,setFile]=useState();
-  console.log(user)
   const user_id = localStorage.getItem("user_id");
-
   const handleChange=(e)=>{
     setUser(prev=>({...prev,[e.target.name]:e.target.value}))
   }
   const handleAddressChange=(e)=>{
     const id=e.target.id;
     const name=e.target.name;
-    console.log(name)
+    
     setUser(prev=>{
       const address_info=prev.address_info.map(address=>{
         if(address._id===id)
@@ -188,8 +185,8 @@ const Profile = () => {
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
-            {admin && <img className={classes.box1} src={profile1} alt="" />}
-            {!admin && (
+            {admin==='true' && <img className={classes.box1} src={profile1} alt="" />}
+            {admin!=='true' && (
               <img
                 className={classes.box1}
                 src={"http://localhost:3020/" + user.user_image}
@@ -244,7 +241,6 @@ const Profile = () => {
                 </Typography>
                 <TextField
                   id="outlined-basic2"
-                  //   sx={{ mt: "1rem" }}
                   name='last_name'
                   placeholder={`${user?.last_name}`}
                   onChange={handleChange}
@@ -269,18 +265,16 @@ const Profile = () => {
                 </Typography>
                 <TextField
                   id="outlined-basic5"
-                  //   sx={{ mt: "1rem" }}
                   name="mobile_no"
-                  placeholder={`${user?.mobile_no}`}
+                  value={String(user?.mobile_no)}
                   variant="outlined"
-                  disabled
-                  type="number"
                   fullWidth
                 />
               </Grid>
-              {user?.address_info?.map(address=>{
-              return (<div>
-                <Divider>
+              {user?.address_info?.map((address, index)=>{
+                
+              return (<Box key={index}>
+                <Divider >
                 <Chip label="Address" />
               </Divider>
                 <Grid
@@ -301,7 +295,7 @@ const Profile = () => {
                 </Typography>
                 <TextField
                   name="address1"
-                  //   sx={{ mt: "1rem" }}
+                  type='text'
                   id={address._id}
                   placeholder={address.address1}
                   onChange={handleAddressChange}
@@ -326,8 +320,8 @@ const Profile = () => {
                 </Typography>
                 <TextField
                   name="address2"
-                  //   sx={{ mt: "1rem" }}
                   id={address._id}
+                  type='text'
                   onChange={handleAddressChange}
                   placeholder={address.address2}
                   variant="outlined"
@@ -351,9 +345,9 @@ const Profile = () => {
                   Landmark
                 </Typography>
                 <TextField
-                  id="outlined-basic8"
-                  //   sx={{ mt: "1rem" }}
-                  name={address._id}
+                  id={address._id}
+                  name="landmark"
+                  type='text'
                   placeholder={address.landmark}
                   onChange={handleAddressChange}
                   variant="outlined"
@@ -378,8 +372,8 @@ const Profile = () => {
                 </Typography>
                 <TextField
                   name="city"
-                  //   sx={{ mt: "1rem" }}
                   id={address._id}
+                  type='text'
                   placeholder={address.city}
                   onChange={handleAddressChange}
                   variant="outlined"
@@ -402,12 +396,12 @@ const Profile = () => {
                   Pincode
                 </Typography>
                 <TextField
+                 
                   name="pincode"
-                  //   sx={{ mt: "1rem" }}
                   id={address._id}
-                  placeholder={address.pincode}
+                  placeholder={String(address.pincode)}
+                  
                   onChange={handleAddressChange}
-                  type="number"
                   variant="outlined"
                   fullWidth
                 />
@@ -418,24 +412,12 @@ const Profile = () => {
                   sx={{ width: "25%", textAlign: "center", mr: "2rem" }}
                 >
                   <FormGroup>
-                  <FormControlLabel control={<Checkbox defaultChecked={address.primary} onChange={handlePrimaryAddress} id={address._id} />} label="Primary Address" />
+                  <FormControlLabel control={<Checkbox checked={address.primary} onChange={handlePrimaryAddress} id={address._id}  />} label="Primary Address" checked={true} />
                   </FormGroup>
                  
                 </Typography>
              
-
-              {/* <Stack alignItems='end'>
-                <Button 
-                  id={address._id}
-                  onClick={handlePrimaryAddress}
-                  color="primary"
-                  sx={{ mr:'1.3rem',  height: "35px", mt: ".7rem",width:'50px' }}
-                  variant="contained"
-                >
-                  Update
-                </Button>
-              </Stack> */}
-              </div>)
+              </Box>)
               })}
               <Divider />
               <Grid
@@ -454,16 +436,11 @@ const Profile = () => {
                 >
                   DOB
                 </Typography>
-
                 <TextField
                   id="outlined-basic11"
-                  //   sx={{ mt: "1rem" }}
                   variant="outlined"
                   sx={{width:'100%'}}
-                  onChange={(e) => setDate(e.target.value)}
                   InputLabelProps={{ shrink: true, required: true }}
-                  type="date"
-                  disabled
                   value={values.someDate}
                   fullWidth
                 />
@@ -478,7 +455,7 @@ const Profile = () => {
                   Update
                 </Button>
                <PasswordForm email={user?.email} />
-               { !admin && <AddressForm email={user?.email}/>}
+               { admin!=='true' && <AddressForm email={user?.email}/>}
               </Stack>
               </form>
           </Stack>

@@ -4,7 +4,7 @@ const Common = () => {
   return (
     <Container sx={{mt:'2rem'}}>
         <Typography variant='h2'>
-            There is no route define for the API
+            There is 
         </Typography>
     </Container>
   )

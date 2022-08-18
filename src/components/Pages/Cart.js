@@ -22,10 +22,10 @@ const Cart = () => {
 
   const empty_Cart = (
     <Typography variant="h2" component="div" sx={{ textAlign: "center" }}>
-      Product cart is Empty
+      Product Cart is Empty
     </Typography>
   );
-  
+
   const orderHandler = () => {
     const createOrder = async (product) => {
       const data = {
@@ -62,7 +62,7 @@ const Cart = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data)
+          
           setUserAddress(prev=>{
           return res.data.address_info.filter(address=>address.primary===true)
           }
@@ -91,7 +91,7 @@ const Cart = () => {
                     "0px 2px 19px 5px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)",
                 }}
               >
-                <Typography variant="h4" component="div" sx={{ mt: "2rem",ml:"2rem" }}>
+                <Typography variant="h4" component="span" sx={{ mt: "2rem",ml:"2rem" }}>
                    Cart ({products.length} items)
                 </Typography>
                 {products.map((product) => (
@@ -113,7 +113,7 @@ const Cart = () => {
                   <Typography
                     gutterBottom
                     variant="h6"
-                    component="div"
+                    component="span"
                     sx={{ ml:'1rem'}}
                   >
                     The Total Amount Of
@@ -142,8 +142,8 @@ const Cart = () => {
                   </Grid>
                   <Divider/>
                   <Typography sx={{mt:'1rem',ml:'1rem',display:'flex',width:'100%'}}>
-                   <div style={{width:'80%'}}> The Total Amount of Product</div>
-                    <div style={{display:'flex',justifyContent:'flex-end',width:'12%'}}>{totalAmount+50}</div>
+                   <span style={{width:'80%'}}> The Total Amount of Product</span>
+                    <span style={{display:'flex',justifyContent:'flex-end',width:'12%'}}>{totalAmount+50}</span>
                   </Typography>
                   <Button
                     color="primary"
@@ -154,7 +154,6 @@ const Cart = () => {
                   >
                     Checkout
                   </Button> 
-                
               </Grid>
             </Grid>
           </>

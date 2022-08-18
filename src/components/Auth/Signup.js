@@ -34,8 +34,7 @@ const Signup = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(typeof +pincode);
-    console.log(typeof city);
+    
     const data = {
       first_name: firstname,
       last_name: lastname,
@@ -49,6 +48,7 @@ const Signup = () => {
         landmark: landmark,
         pincode: +pincode,
       },
+      dob:date,
     };
 
     const formData = new FormData();
@@ -63,7 +63,7 @@ const Signup = () => {
     formData.append("city", data.address_info.city);
     formData.append("landmark", data.address_info.landmark);
     formData.append("pincode", data.address_info.pincode);
-    
+    formData.append("dob", data.dob);
     const signup = async () => {
       await axios
         .post("http://localhost:3020/api/user", formData)
@@ -98,7 +98,6 @@ const Signup = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   id="outlined-basic1"
-                  //   sx={{ mt: "1rem" }}
                   label="First Name"
                   placeholder="First Name"
                   variant="outlined"
@@ -110,7 +109,6 @@ const Signup = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   id="outlined-basic2"
-                  //   sx={{ mt: "1rem" }}
                   label="Last Name"
                   placeholder="Last Name"
                   onChange={(e) => setLastName(e.target.value)}
@@ -123,7 +121,6 @@ const Signup = () => {
             <Grid sx={{ mb: 2 }}>
               <TextField
                 id="outlined-basic3"
-                //   sx={{ mt: "1rem" }}
                 label="Email"
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -136,7 +133,6 @@ const Signup = () => {
             <Grid sx={{ mb: 2 }}>
               <TextField
                 id="outlined-basic4"
-                //   sx={{ mt: "1rem" }}
                 label="password"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}
@@ -149,7 +145,6 @@ const Signup = () => {
             <Grid sx={{ mb: 2 }}>
               <TextField
                 id="outlined-basic5"
-                //   sx={{ mt: "1rem" }}
                 label="Mobile-No"
                 placeholder="Mobile Number"
                 onChange={(e) => setMob(e.target.value)}
@@ -163,7 +158,6 @@ const Signup = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   id="outlined-basic6"
-                  //   sx={{ mt: "1rem" }}
                   label="address1"
                   placeholder="Address1"
                   onChange={(e) => setAddress1(e.target.value)}
@@ -175,7 +169,6 @@ const Signup = () => {
               <Grid item xs={12} md={6}>
                 <TextField
                   id="outlined-basic7"
-                  //   sx={{ mt: "1rem" }}
                   label="address2"
                   onChange={(e) => setAddress2(e.target.value)}
                   placeholder="Address2"
@@ -189,7 +182,6 @@ const Signup = () => {
               <Grid item xs={12} md={4}>
                 <TextField
                   id="outlined-basic8"
-                  //   sx={{ mt: "1rem" }}
                   label="Landmark"
                   placeholder="Landmark"
                   onChange={(e) => setLandmark(e.target.value)}
@@ -201,7 +193,6 @@ const Signup = () => {
               <Grid item xs={12} md={4}>
                 <TextField
                   id="outlined-basic9"
-                  //   sx={{ mt: "1rem" }}
                   label="City"
                   placeholder="City"
                   onChange={(e) => setCity(e.target.value)}
@@ -212,7 +203,6 @@ const Signup = () => {
               <Grid item xs={12} md={4}>
                 <TextField
                   id="outlined-basic10"
-                  //   sx={{ mt: "1rem" }}
                   label="Pincode"
                   placeholder="Pincode"
                   onChange={(e) => setPincode(e.target.value)}
@@ -236,7 +226,7 @@ const Signup = () => {
               />
             </Grid>
             <Grid sx={{ mb: 2, display: "flex", alignItems: "center" }}>
-              <Typography variant="h6" sx={{ mr: "1rem" }} cl>
+              <Typography variant="h6" sx={{ mr: "1rem" }} >
                 Profile Image
               </Typography>
               <input

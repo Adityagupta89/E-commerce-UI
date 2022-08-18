@@ -27,11 +27,10 @@ const ProductCart = (props) => {
               src={"http://localhost:3020/" + props.product.product_image}
               alt="green iguana"
               style={{
-                width: "70%",
+                width: "85%",
                 backgroundSize: "auto",
                 height: "250px",
-                boxShadow:
-                  "0px 2px 19px 5px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)",
+                
               }}
             />
           </Stack>
@@ -44,20 +43,20 @@ const ProductCart = (props) => {
             </Typography>
             <Typography gutterBottom variant="h5" component="div">
               Qty : {props.product.size}
-              <IconButton aria-label="share">
+              <IconButton aria-label="share" onClick={addProductHandler}>
                 <AddIcon
                   sx={{
                     border: "1px solid black",
                     borderRadius: "1rem",
                     ml: ".5rem",
                   }}
-                  onClick={addProductHandler}
+                  
                 />
               </IconButton>
-              <IconButton aria-label="share">
+              <IconButton aria-label="share" onClick={removeProductHandler}>
                 <RemoveIcon
                   sx={{ border: "1px solid black", borderRadius: "1rem" }}
-                  onClick={removeProductHandler}
+                  
                 />
               </IconButton>
             </Typography>

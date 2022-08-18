@@ -13,20 +13,19 @@ const Product = () => {
   const dispatch = useDispatch();
   const [product, setProduct] = useState({});
   const image = "http://localhost:3020/" + product.product_image;
-
+  const token = localStorage.getItem("token");
   const addProductHandler = () => {
     dispatch(cartAction.addProduct({ product: product }));
   };
   useEffect(() => {
     fetch(`http://localhost:3020/api/product/${param.id}`, {
       headers: {
-        "x-auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+        "x-auth-token":token,
       },
     })
       .then((res) => res.json())
       .then((res) => setProduct(res));
-  }, [param.id]);
+  }, [param.id,token]);
   
   return (
     <>
@@ -37,11 +36,9 @@ const Product = () => {
               alt='Not Found'
               src={image}
               style={{
-                width: "60%",
+                width: "90%",
                 height: "70vh",
                 backgroundSize: "cover",
-                boxShadow:
-                  "0px 2px 19px 5px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)",
               }}
             />
           </Box>
