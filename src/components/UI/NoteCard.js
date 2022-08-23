@@ -11,17 +11,23 @@ import SendToMobileIcon from "@mui/icons-material/SendToMobile";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import { Button } from "@mui/material";
+import { useState } from "react";
 import OrderForm from "./OrderForm";
 import { useDispatch } from "react-redux";
+import { FormControl } from "@mui/material";
+
+import { Select } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { cartAction } from "../redux/cartSlice";
 import { useSelector } from "react-redux";
 
 const NoteCard = (props) => {
   const admin = useSelector((state) => state.auth.isAdmin);
+  const [option, setOption] = useState(1);
   const dispatch = useDispatch();
 
   const addProductHandler = () => {
-    dispatch(cartAction.addProduct({ product: props.product }));
+    dispatch(cartAction.addProduct({ product: props.product, size: option }));
   };
 
   return (
@@ -34,7 +40,7 @@ const NoteCard = (props) => {
       }}
     >
       <Link
-        to={`/api/product/${props.product._id}`}
+        to={`/product/${props.product._id}`}
         style={{ textDecoration: "none" }}
       >
         <CardHeader
@@ -58,8 +64,9 @@ const NoteCard = (props) => {
       />
       <CardContent
         sx={{
-          height: "10vh",
+          height: props.product.category === "laptop" ? "18vh" : "14vh",
           display: "flex",
+          padding: "10px",
           flexDirection: "column",
           justifyContent: "space-evenly",
         }}
@@ -71,6 +78,24 @@ const NoteCard = (props) => {
           <strong style={{ fontSize: "1.5rem" }}>Price</strong>{" "}
           {props.product.price}
         </Typography>
+        <Typography gutterBottom variant="h5" component="div">
+          Qty :
+          <FormControl sx={{ ml: "10px" }}>
+            <Select
+              sx={{ height: "35px" }}
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              defaultValue={1}
+              onChange={(e) => setOption(e.target.value)}
+            >
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+              <MenuItem value={4}>4</MenuItem>
+              <MenuItem value={5}>5</MenuItem>
+            </Select>
+          </FormControl>
+        </Typography>
       </CardContent>
       <CardActions disableSpacing sx={{ justifyContent: "space-evenly" }}>
         <Button
@@ -80,9 +105,9 @@ const NoteCard = (props) => {
         >
           Add to Cart
         </Button>
-        {admin==='true' && (
+        {admin === "true" && (
           <IconButton aria-label="share">
-            <Link to={`/api/product/edit/${props.product._id}`}>
+            <Link to={`/product/edit/${props.product._id}`}>
               <EditIcon />
             </Link>
           </IconButton>
@@ -96,7 +121,5 @@ const NoteCard = (props) => {
     </Card>
   );
 };
-
-
 
 export default NoteCard;

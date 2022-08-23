@@ -10,27 +10,31 @@ import Select from "@mui/material/Select";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Pagination from '@mui/material/Pagination';
-import usePagination from "../../components/Shared/Pagination"
+import Pagination from "@mui/material/Pagination";
 import classes from "./Home.module.css";
 import { useMemo } from "react";
+import Header from "../UI/Header";
 
 const Home = (props) => {
   const [products, setProducts] = useState([]);
   const [sort, setSort] = useState("");
-  let [page,setPage]=useState(1);
+  const [category, setCategory] = useState("mobile");
+  let [page, setPage] = useState(1);
   const admin = useSelector((state) => state.auth.isAdmin);
-  const PER_PAGE=8;
-  const count = Math.ceil(products.length / PER_PAGE);
-  const _DATA = usePagination(products, PER_PAGE);
+  const [maxPage, setMaxpage] = useState(0);
+  // const _DATA = usePagination(products, PER_PAGE);
 
   const handleChangePagination = (e, p) => {
+    if (p === 0) return;
+    if (p > maxPage) return;
     setPage(p);
-    _DATA.jump(p);
   };
 
   const handleChange = (event) => {
     setSort(event.target.value);
+  };
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
   };
 
   useMemo(() => {
@@ -42,19 +46,47 @@ const Home = (props) => {
       const result = products.sort((a, b) => +a.price - +b.price);
       setProducts(result);
     }
-  }, [sort,products]);
+  }, [sort, products]);
+
   useEffect(() => {
-    fetch("http://localhost:3020/api/product/", {
-      headers: {
-        "x-auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
-      },
-    })
+    fetch(
+      `http://localhost:3020/api/product/pagination?page=${page}&category=${category}`,
+      {
+        headers: {
+          "x-auth-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+        },
+      }
+    )
       .then((res) => res.json())
-      .then((res) => setProducts(res));
-  }, []);
+      .then((res) => {
+        setProducts(res.data);
+        setMaxpage(res.maxPage);
+      });
+  }, [page, maxPage, category]);
+
+  useEffect(() => {
+    const searchAPI = () => {
+      fetch(
+        `http://localhost:3020/api/product/search?search=${props.searchData}`,
+        {
+          headers: {
+            "x-auth-token":
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmRlNTIxYTdiM2M3YTY4OGQ2YWE2MTQiLCJpc19BZG1pbiI6dHJ1ZSwiaWF0IjoxNjU4NzM3ODk4fQ.PYgHclewRgYHexzZZ6G2qOmnjSRxTDDbVu6yeYbHpJo",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => setProducts(res.data));
+    };
+    //  setTimeout(()=>{
+    searchAPI();
+    //  },1000)
+  }, [props.searchData]);
+
   return (
     <>
+      <Header search={props.search} />
       <Grid className={classes.card} sx={{ mt: 8, m: "auto" }}>
         <Box
           sx={{
@@ -64,8 +96,12 @@ const Home = (props) => {
             mr: "2rem",
           }}
         >
-          {admin==='true' && (
-            <Link to="api/product/" className={classes.sort} style={{ textDecoration: "none" }}>
+          {admin === "true" && (
+            <Link
+              to="/product"
+              className={classes.sort}
+              style={{ textDecoration: "none" }}
+            >
               <Button
                 variant="outlined"
                 sx={{
@@ -80,6 +116,22 @@ const Home = (props) => {
               </Button>
             </Link>
           )}
+          <div className={classes.category}>
+            <FormControl sx={{ minWidth: "12rem" }}>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={category}
+                label="Sort"
+                onChange={handleCategoryChange}
+              >
+                <MenuItem value="mobile">Mobile</MenuItem>
+                <MenuItem value="laptop">Laptop</MenuItem>
+                <MenuItem value="tablet">Tablet</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div className={classes.sort}>
             <FormControl sx={{ minWidth: "12rem" }}>
               <InputLabel id="demo-simple-select-label">Sort</InputLabel>
@@ -98,28 +150,24 @@ const Home = (props) => {
         </Box>
 
         <Grid container>
-          {_DATA.currentData()
-            .filter((product) => {
-              if (props.searchData === "") return product;
-              else if (
-                product.name
-                  .toLowerCase()
-                  .includes(props.searchData.toLowerCase())
-              )
-                return product;
-                
-            })
-            .map((product) => (
-              <Grid item key={product._id} xs={12} sm={4} lg={3} sx={{marginBottom:'2rem'}}>
-                <NoteCard product={product} />
-              </Grid>
-            ))}
+          {products.map((product) => (
+            <Grid
+              item
+              key={product._id}
+              xs={12}
+              sm={4}
+              lg={3}
+              sx={{ marginBottom: "2rem" }}
+            >
+              <NoteCard product={product} />
+            </Grid>
+          ))}
         </Grid>
       </Grid>
       <Pagination
-        count={count}
+        count={maxPage}
         size="large"
-        sx={{display:'flex',justifyContent:'center'}}
+        sx={{ display: "flex", justifyContent: "center" }}
         page={page}
         variant="outlined"
         shape="rounded"

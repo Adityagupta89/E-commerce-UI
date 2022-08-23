@@ -8,10 +8,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import axios from "axios";
 import { useState } from "react";
-const  PasswordForm = (props) =>{
+
+const PasswordForm = (props) => {
   const [open, setOpen] = React.useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -37,7 +37,7 @@ const  PasswordForm = (props) =>{
         if (res.status === 200) {
           setTimeout(() => {
             setOpen(false);
-          }, 3000);
+          }, 2000);
           toast(res.data.msg);
         }
       })
@@ -103,5 +103,5 @@ const  PasswordForm = (props) =>{
       </Dialog>
     </div>
   );
-}
-export default PasswordForm
+};
+export default PasswordForm;

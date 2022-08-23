@@ -10,7 +10,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useState } from "react";
-const EmailForm = () =>{
+
+const EmailForm = () => {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = useState();
   const handleClickOpen = () => {
@@ -35,12 +36,24 @@ const EmailForm = () =>{
           toast(res.data.msg);
         }
       })
-      .catch((err) => toast(err.message));
+      .catch((err) => {
+        toast(err.response.data.msg);
+      });
   };
 
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+      />
       <Button variant="text" sx={{ mt: ".7rem" }} onClick={handleClickOpen}>
         Forgot Password ?
       </Button>
@@ -74,5 +87,6 @@ const EmailForm = () =>{
       </Dialog>
     </div>
   );
-}
+};
+
 export default EmailForm;
