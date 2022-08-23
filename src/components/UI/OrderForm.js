@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const OrderForm =(props) =>{
+const OrderForm = (props) => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [address1, setAddress1] = useState();
@@ -24,6 +24,7 @@ const OrderForm =(props) =>{
   const token = localStorage.getItem("token");
 
   const handleClickOpen = () => {
+    if (user_id === null) navigate("/login");
     setOpen(true);
   };
   const handleClose = () => {
@@ -43,51 +44,62 @@ const OrderForm =(props) =>{
         )
         .catch((err) => console.log(err));
     }
-  }, [open,user_id]);
+  }, [open, user_id]);
 
   const submitHandler = (e) => {
-    console.log("Aditya");
     e.preventDefault();
     const data = {
       user_id: user_id,
       product_id: product_id,
       amount: props.price,
       address_info: {
-        address1: address1,
-        address2: address2,
-        city: city,
-        landmark: landmark,
-        pincode: pincode,
+        address1: address1 ? address1 : user[0]?.address1,
+        address2: address2 ? address2 : user[0]?.address2,
+        city: city ? city : user[0]?.city,
+        landmark: landmark ? landmark : user[0]?.landmark,
+        pincode: pincode ? pincode : user[0]?.pincode,
       },
     };
-    const createOrder = async () => {
-      await fetch("http://localhost:3020/api/order", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": token,
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-          if (res.status === 400) toast(res.msg);
-          if (res.status === 201) {
-            setTimeout(() => {
-              navigate("/");
-            }, 3000);
-            toast(res.msg);
-            setOpen(false);
-          }
-        })
-        .catch((err) => console.log(err));
-    };
-    createOrder();
+
+    createOrder(data);
   };
+
+  const createOrder = async (data) => {
+    await fetch("http://localhost:3020/api/order", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": token,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 400) toast(res.msg);
+        if (res.status === 201) {
+          setTimeout(() => {
+            navigate("/");
+          }, 3000);
+          toast(res.msg);
+          setOpen(false);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+      />
       <Button
         variant="contained"
         sx={{
@@ -100,97 +112,101 @@ const OrderForm =(props) =>{
       </Button>
       <Dialog open={open} onClose={handleClose}>
         {/* <DialogTitle>Subsc</DialogTitle> */}
-        <form onSubmit={submitHandler}>
-          <DialogContent>
-            <DialogContentText sx={{ mb: "1rem", textAlign: "center" }}>
-              Please Enter the details and place the order
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="amount"
-              label="amount"
-              InputLabelProps={{ shrink: true }}
-              value={props.price}
-              fullWidth
-              variant="outlined"
-              required
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="address1"
-              label="Address1"
-              InputLabelProps={{ shrink: true }}
-              placeholder={user[0]?.address1}
-              onChange={(e) => setAddress1(e.target.value)}
-              fullWidth
-              variant="outlined"
-              required
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="address2"
-              placeholder={user[0]?.address2}
-              label="Address2"
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => setAddress2(e.target.value)}
-              fullWidth
-              required
-              variant="outlined"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="landmark"
-              label="Landmark"
-              placeholder={user[0]?.landmark}
-              InputLabelProps={{ shrink: true }}
-              onChange={(e) => setLandmark(e.target.value)}
-              fullWidth
-              variant="outlined"
-              required
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="city"
-              label="City"
-              InputLabelProps={{ shrink: true }}
-               placeholder={user[0]?.city}
-              onChange={(e) => setCity(e.target.value)}
-              fullWidth
-              variant="outlined"
-              required
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="pincode"
-              name="pincode"
-              type="number"
-              InputLabelProps={{ shrink: true }}
-              label="Pincode"
-              placeholder={`${user[0]?.pincode}`}
-              onChange={(e) => setPincode(e.target.value)}
-              fullWidth
-              variant="outlined"
-              required
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" color="primary" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" type="submit">
-              Place
-            </Button>
-          </DialogActions>
-        </form>
+        {user[0] ? (
+          <form onSubmit={submitHandler}>
+            <DialogContent>
+              <DialogContentText sx={{ mb: "1rem", textAlign: "center" }}>
+                Please Enter the details and place the order
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="amount"
+                label="amount"
+                InputLabelProps={{ shrink: true }}
+                value={props.price}
+                fullWidth
+                variant="outlined"
+                required
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="address1"
+                label="Address1"
+                defaultValue={user[0]?.address1}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setAddress1(e.target.value)}
+                fullWidth
+                variant="outlined"
+                required
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="address2"
+                label="Address2"
+                defaultValue={user[0]?.address2}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setAddress2(e.target.value)}
+                fullWidth
+                required
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="landmark"
+                label="Landmark"
+                defaultValue={user[0]?.landmark}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setLandmark(e.target.value)}
+                fullWidth
+                variant="outlined"
+                required
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="city"
+                label="City"
+                InputLabelProps={{ shrink: true }}
+                defaultValue={user[0]?.city}
+                onChange={(e) => setCity(e.target.value)}
+                fullWidth
+                variant="outlined"
+                required
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="pincode"
+                name="pincode"
+                type="number"
+                defaultValue={user[0]?.pincode}
+                InputLabelProps={{ shrink: true }}
+                label="Pincode"
+                onChange={(e) => setPincode(e.target.value)}
+                fullWidth
+                variant="outlined"
+                required
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" color="primary" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button variant="contained" color="primary" type="submit">
+                Place
+              </Button>
+            </DialogActions>
+          </form>
+        ) : (
+          <></>
+        )}
       </Dialog>
     </div>
   );
-}
+};
 
-export default OrderForm
+export default OrderForm;
