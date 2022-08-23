@@ -31,10 +31,3 @@
     }
     
   }
-  @media only scree and (max-width:1300px){
-    .address{
-        bottom: 0px;
-        left:0px;
-        margin-left: 0px;
-    }
-}

@@ -20,11 +20,9 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Stack } from "@mui/material";
-import Header from "../UI/Header";
 
-const Order = (props) => {
+ const Order = (props) => {
   const [orderData, setOrderData] = useState([
     {
       _id: "",
@@ -45,44 +43,28 @@ const Order = (props) => {
   const [orderBy, setOrderBy] = React.useState("price");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const user_id = useSelector((state) => state.auth.user_id);
-  const admin = useSelector((state) => state.auth.isAdmin);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   const token = localStorage.getItem("token");
   useEffect(() => {
-    const allProduct = () => {
-      fetch(`http://localhost:3020/api/order/`, {
-        headers: {
-          "x-auth-token": token,
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => setOrderData(res));
-    };
-    const filterProduct = () => {
-      fetch(`http://localhost:3020/api/order/${user_id}`, {
-        headers: {
-          "x-auth-token": token,
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => setOrderData(res.data));
-    };
-    if (admin === "true") allProduct();
-    else filterProduct();
-  }, [user_id, admin, token]);
+    fetch(`http://localhost:3020/api/order/`, {
+      headers: {
+        "x-auth-token": token,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setOrderData(res));
+  }, [token]);
 
   const rows = orderData
-    ?.filter((order) => {
+    .filter((order) => {
       if (props.searchData === "") return order;
       else if (
-        order.product.name
-          ?.toLowerCase()
+        order.product.name?.toLowerCase()
           .includes(props.searchData?.toLowerCase())
       )
         return order;
-      return false;
     })
     .map((order) =>
       createData(
@@ -132,113 +114,93 @@ const Order = (props) => {
 
   return (
     <>
-      {orderData && (
-        <>
-          <Header search={props.search} />
-          <Stack sx={{ mt: "5rem", height: "80vh", flexDirection: "row" }}>
-            <Box sx={{ width: "100%" }}>
-              <Paper sx={{ width: "100%", mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-                <TableContainer>
-                  <Table
-                    sx={{ minWidth: 750 }}
-                    aria-labelledby="tableTitle"
-                    size={dense ? "small" : "medium"}
-                  >
-                    <EnhancedTableHead
-                      numSelected={selected.length}
-                      order={order}
-                      orderBy={orderBy}
-                      onSelectAllClick={handleSelectAllClick}
-                      onRequestSort={handleRequestSort}
-                      rowCount={rows.length}
-                    />
-                    <TableBody>
-                      {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
-                      {stableSort(rows, getComparator(order, orderBy))
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row, index) => {
-                          const isItemSelected = isSelected(row.name);
-                          const labelId = `enhanced-table-checkbox-${index}`;
-
-                          return (
-                            <TableRow
-                              hover
-                              role="checkbox"
-                              aria-checked={isItemSelected}
-                              tabIndex={-1}
-                              key={index}
-                              selected={isItemSelected}
-                            >
-                              <TableCell padding="checkbox"></TableCell>
-                              <TableCell
-                                component="th"
-                                id={labelId}
-                                scope="row"
-                                padding="none"
-                              >
-                                {row.name}
-                              </TableCell>
-                              <TableCell align="left">{row.email}</TableCell>
-                              <TableCell align="left">
-                                {row.mobile_no}
-                              </TableCell>
-                              <TableCell align="left">{row.category}</TableCell>
-                              <TableCell align="left">{row.price}</TableCell>
-                              <TableCell align="left">{row.city}</TableCell>
-                              <TableCell align="left">{row.date}</TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      {emptyRows > 0 && (
-                        <TableRow
-                          style={{
-                            height: (dense ? 33 : 53) * emptyRows,
-                          }}
-                        >
-                          <TableCell colSpan={6} />
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={rows.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
+      <Stack sx={{ mt: "5rem", height: "80vh", flexDirection: "row" }}>
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "100%", mb: 2 }}>
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={dense ? "small" : "medium"}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
                 />
-              </Paper>
-              <FormControlLabel
-                control={
-                  <Switch checked={dense} onChange={handleChangeDense} />
-                }
-                label="Dense padding"
-              />
-            </Box>
-          </Stack>
-        </>
-      )}
+                <TableBody>
+                  {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.slice().sort(getComparator(order, orderBy)) */}
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={index}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox"></TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            {row.name}
+                          </TableCell>
+                          <TableCell align="left">{row.email}</TableCell>
+                          <TableCell align="left">{row.mobile_no}</TableCell>
+                          <TableCell align="left">{row.category}</TableCell>
+                          <TableCell align="left">{row.price}</TableCell>
+                          <TableCell align="left">{row.city}</TableCell>
+                          <TableCell align="left">{row.date}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+          <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
+          />
+        </Box>
+      </Stack>
     </>
   );
-};
+}
 
-const createData = (
-  name,
-  email,
-  mobile_no,
-  category,
-  price,
-  city,
-  order_date
-) => {
+const createData=(name, email, mobile_no, category, price, city, order_date) => {
   let date = new Date(order_date);
   date = date.toLocaleDateString("en-US");
 
@@ -251,9 +213,9 @@ const createData = (
     city,
     date,
   };
-};
+}
 
-const descendingComparator = (a, b, orderBy) => {
+const descendingComparator=(a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -261,17 +223,17 @@ const descendingComparator = (a, b, orderBy) => {
     return 1;
   }
   return 0;
-};
+}
 
-const getComparator = (order, orderBy) => {
+const getComparator=(order, orderBy) =>{
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-};
+}
 
 // This method is created for cross-browser compatibility, if you don't
 // need to support IE11, you can use Array.prototype.sort() directly
-const stableSort = (array, comparator) => {
+const stableSort=(array, comparator) =>{
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -281,7 +243,7 @@ const stableSort = (array, comparator) => {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-};
+}
 
 const headCells = [
   {
@@ -329,7 +291,11 @@ const headCells = [
 ];
 
 const EnhancedTableHead = (props) => {
-  const { order, orderBy, onRequestSort } = props;
+  const {
+    order,
+    orderBy,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -359,7 +325,7 @@ const EnhancedTableHead = (props) => {
       </TableRow>
     </TableHead>
   );
-};
+}
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected } = props;
@@ -404,7 +370,7 @@ const EnhancedTableToolbar = (props) => {
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      )}
+      ) }
     </Toolbar>
   );
 };
@@ -422,4 +388,4 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-export default Order;
+export default Order

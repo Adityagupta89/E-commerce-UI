@@ -12,13 +12,12 @@ const ProductCart = (props) => {
   const dispatch = useDispatch();
 
   const addProductHandler = () => {
-    dispatch(cartAction.addProduct({ product: props.product, size: 1 }));
+    dispatch(cartAction.addProduct({ product: props.product }));
   };
 
   const removeProductHandler = () => {
     dispatch(cartAction.removeProduct({ id: props.product._id }));
   };
-
   return (
     <>
       <Grid container sx={{ maxWidth: "100%", p: "2rem" }}>
@@ -31,10 +30,11 @@ const ProductCart = (props) => {
                 width: "85%",
                 backgroundSize: "auto",
                 height: "250px",
+                
               }}
             />
           </Stack>
-          <Stack sx={{ justifyContent: "space-between", width: "50%" }}>
+          <Stack sx={{ justifyContent: "space-between" }}>
             <Typography gutterBottom variant="h5" component="div">
               {props.product.name}
             </Typography>
@@ -50,11 +50,13 @@ const ProductCart = (props) => {
                     borderRadius: "1rem",
                     ml: ".5rem",
                   }}
+                  
                 />
               </IconButton>
               <IconButton aria-label="share" onClick={removeProductHandler}>
                 <RemoveIcon
                   sx={{ border: "1px solid black", borderRadius: "1rem" }}
+                  
                 />
               </IconButton>
             </Typography>
@@ -67,6 +69,6 @@ const ProductCart = (props) => {
       <Divider />
     </>
   );
-};
+}
 
-export default ProductCart;
+export default ProductCart

@@ -10,7 +10,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const paperStyling = {
   width: "25vw",
   // height: "70vh",
@@ -33,8 +32,9 @@ const Signup = () => {
   const [date, setDate] = useState("");
   const navigate = useNavigate();
 
-  const submitHandler = async (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
+    
     const data = {
       first_name: firstname,
       last_name: lastname,
@@ -48,7 +48,7 @@ const Signup = () => {
         landmark: landmark,
         pincode: +pincode,
       },
-      dob: date,
+      dob:date,
     };
 
     const formData = new FormData();
@@ -64,52 +64,29 @@ const Signup = () => {
     formData.append("landmark", data.address_info.landmark);
     formData.append("pincode", data.address_info.pincode);
     formData.append("dob", data.dob);
-
-    await axios
-      .post("http://localhost:3020/api/user", formData)
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === 400)
-          toast.error(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-        if (res.data.status === 201) {
-          setTimeout(() => {
-            navigate("/");
-          }, 2000);
-          toast.success(res.data.msg, {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
-        }
-      })
-      .catch((err) => toast(err.response.data.msg));
+    const signup = async () => {
+      await axios
+        .post("http://localhost:3020/api/user", formData)
+        .then((res) => {
+          console.log(res);
+          if (res.data.status === 400) toast(res.data.msg);
+          if (res.data.status === 201) {
+            setTimeout(() => {
+              navigate("/");
+            }, 3000);
+            toast(res.data.msg);
+          }
+        })
+        .catch((err) => toast(err.response.data.msg));
+    };
+    signup();
   };
-
+  
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
       <Grid>
-        <Paper elevation={10} style={paperStyling}>
+        <Paper elevation={20} style={paperStyling}>
           <Grid align="center" sx={{ mb: "1rem" }}>
             <Avatar style={{ backgroundColor: "green" }}>
               <LockOpenIcon />
@@ -171,7 +148,6 @@ const Signup = () => {
                 label="Mobile-No"
                 placeholder="Mobile Number"
                 onChange={(e) => setMob(e.target.value)}
-                InputLabelProps={{ shrink: true }}
                 variant="outlined"
                 required
                 type="number"
@@ -250,7 +226,7 @@ const Signup = () => {
               />
             </Grid>
             <Grid sx={{ mb: 2, display: "flex", alignItems: "center" }}>
-              <Typography variant="h6" sx={{ mr: "1rem" }}>
+              <Typography variant="h6" sx={{ mr: "1rem" }} >
                 Profile Image
               </Typography>
               <input

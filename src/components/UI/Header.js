@@ -17,39 +17,39 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Chip } from "@mui/material";
 
-const Header = (props) => {
+const  Header = (props) =>{
   const [search, setSearch] = useState("");
   const dispatch = useDispatch();
   const products = useSelector((state) => state.cart.product);
   const navigate = useNavigate();
-  const user_id = localStorage.getItem("user_id");
-  const numberOfCartItems = products.length;
-  const login = useSelector((state) => state.auth.isLogin);
+  const numberOfCartItems = products.reduce((curNumber, product) => {
+    return curNumber + product.size;
+  }, 0);
   const buttonHandle = () => {
     dispatch(authAction.admin({ value: false }));
     dispatch(authAction.logout());
-    localStorage.removeItem("user_id");
     localStorage.removeItem("islogin");
-    localStorage.removeItem("isadmin");
+    localStorage.removeItem('isadmin')
     navigate("/login");
   };
   props.search(search);
-
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Stack direction="row" sx={{ width: "40%" }}>
-          <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <Button color="inherit">Product</Button>
+        <Link to="/" style={{ textDecoration: "none", color: "white" }}>
+          <Button color="inherit">
+           Product
+          </Button>
           </Link>
-          {login && (
-            <Link
-              to={`/order/${user_id}`}
+          <Link
+              to="api/order/"
               style={{ textDecoration: "none", color: "white" }}
             >
-              <Button color="inherit">Order</Button>
-            </Link>
-          )}
+          <Button color="inherit">
+              Order
+          </Button>
+          </Link>
         </Stack>
         <div className={classes.search}>
           <Stack
@@ -71,89 +71,65 @@ const Header = (props) => {
                 inputProps={{ "aria-label": "search" }}
               />
             </Search>
-            {!login && (
+            <Link to="api/profile">
+              <AccountCircleIcon
+                sx={{
+                  fontSize: "2rem",
+                  ml: "10px",
+                  mr: "10px",
+                  mt: "4px",
+                  color: "#e7e2e2",
+                }}
+              />
+            </Link>
+            <div className={classes.chip}>
+            <Box
+              sx={{
+                backgroundColor: "#165ba0",
+                borderRadius: "20px",
+                width: "100%",
+                p: "5px",
+                
+              }}
+            >
               <Link
-                to="/login"
-                style={{ color: "white", textDecoration: "none" }}
+                to="api/cart/"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
               >
-                <Box
+                <ShoppingCartIcon
                   sx={{
-                    border: "0px solid black",
-                    m: "1rem",
-                    width: "60px",
-                    height: "41px",
-                    borderRadius: "10px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#4089d3",
-                  }}
-                >
-                  Login
-                </Box>
-              </Link>
-            )}
-            {login && (
-              <Link to="/profile">
-                <AccountCircleIcon
-                  sx={{
-                    fontSize: "2rem",
-                    ml: "10px",
-                    mr: "10px",
-                    mt: "4px",
+                    fontSize: "1.8rem",
+                    textAlign: "center",
                     color: "#e7e2e2",
                   }}
                 />
-              </Link>
-            )}
-            <div className={classes.chip}>
-              <Box
-                sx={{
-                  backgroundColor: "#165ba0",
-                  borderRadius: "20px",
-                  width: "100%",
-                  p: "5px",
-                }}
-              >
-                <Link
-                  to="/cart/"
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-evenly",
+                <Chip
+                  label={numberOfCartItems}
+                  sx={{
+                    fontSize: "1.5rem",
+                    cursor: "pointer",
+                    backgroundColor: "#1c6cbb",
                   }}
-                >
-                  <ShoppingCartIcon
-                    sx={{
-                      fontSize: "1.8rem",
-                      textAlign: "center",
-                      color: "#e7e2e2",
-                    }}
-                  />
-                  <Chip
-                    label={numberOfCartItems}
-                    sx={{
-                      fontSize: "1.5rem",
-                      cursor: "pointer",
-                      backgroundColor: "#1c6cbb",
-                    }}
-                  />
-                </Link>
-              </Box>
-            </div>
-            {login && (
-              <LogoutIcon
-                onClick={buttonHandle}
-                sx={{ cursor: "pointer", fontSize: "2rem" }}
-              />
-            )}
+                  
+                />
+              </Link>
+            </Box>
+            </div >
+            <LogoutIcon
+              onClick={buttonHandle}
+              sx={{ cursor: "pointer", fontSize: "2rem" }}
+            />
           </Stack>
         </div>
       </Toolbar>
     </AppBar>
   );
-};
+}
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -196,5 +172,4 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-
-export default Header;
+export default Header
